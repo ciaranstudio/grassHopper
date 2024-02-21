@@ -371,7 +371,7 @@ export default () => {
       </Canvas>
       {/* {!isTouchScreen && <Interface />} */}
       <Interface />
-      <Leva collapsed />
+      <Leva hidden collapsed />
       <SpeedTextTunnel.Out />
       {/* <ControlsText>use wasd to drive, space to break</ControlsText> */}
     </>

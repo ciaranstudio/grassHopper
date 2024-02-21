@@ -435,7 +435,7 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
                       <meshPhongMaterial
                         color={"#000000"}
                         transparent
-                        opacity={0.75}
+                        opacity={0.97}
                       />
                     </mesh>
                   </group>
