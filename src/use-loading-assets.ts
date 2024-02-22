@@ -7,6 +7,8 @@ export const useLoadingAssets = () => {
 
     useEffect(() => {
         setLoading(progress !== 100)
+        if (progress === 100) {
+        }
     }, [progress])
 
     return loading

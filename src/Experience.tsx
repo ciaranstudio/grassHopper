@@ -3,7 +3,6 @@ import {
   Sky,
 } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-
 import { Physics, useBeforePhysicsStep } from "@react-three/rapier";
 import { Leva, useControls as useLeva } from "leva";
 import { Suspense, useState, useEffect, useRef } from "react";
@@ -103,6 +102,7 @@ const Scene = () => {
             setOverlayAlpha(overlayOpacity.value);
           },
           // onComplete: () => {
+          //   // set show interface to true
           // },
         });
         // update loadingBarElement
@@ -311,6 +311,7 @@ export default () => {
     debug: false,
   });
 
+  const [showControls, setShowControls] = useState(false)
   const toggleJoystickOn = useGame((state) => state.toggleJoystickOn);
   const toggleJoystickOff = useGame((state) => state.toggleJoystickOff);
   // const [isTouchScreen, setIsTouchScreen] = useState(false);
@@ -318,7 +319,7 @@ export default () => {
   useEffect(() => {
     // Check if using a touch control device, show/hide joystick
     if ("ontouchstart" in window || navigator.maxTouchPoints > 0) {
-      // setIsTouchScreen(true);
+      // setIsTouchScreen(true);    
       toggleJoystickOn();
     } else {
       // setIsTouchScreen(false);
@@ -333,6 +334,14 @@ export default () => {
       });
     };
   }, []);
+
+  useEffect(()=>{
+    if (!loading) {
+      window.setTimeout(() => {
+        setShowControls(true)
+      }, 1750);
+    }
+  }, [loading])
 
   return (
     <>
@@ -365,10 +374,9 @@ export default () => {
         </Physics>
       </Canvas>
      
-      {/* {!isTouchScreen && <Interface />} */}
-      <Interface />
+      {showControls && <Interface />}   
       <Leva hidden collapsed />
-      <SpeedTextTunnel.Out />
+      {showControls && <SpeedTextTunnel.Out />}
       {/* <ControlsText>use wasd to drive, space to break</ControlsText> */}
       </Suspense>
     </>

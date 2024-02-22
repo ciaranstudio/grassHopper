@@ -2,6 +2,8 @@ import { Canvas as R3FCanvas } from "@react-three/fiber";
 import { EcctrlJoystick } from "ecctrl";
 import useGame from "./stores/useGame";
 // import { PropsWithChildren } from "react";
+import { useLoadingAssets } from "./use-loading-assets";
+import { useState, useEffect } from "react";
 
 export interface CustomJoystickProps {
 }
@@ -15,9 +17,20 @@ const EcctrlJoystickControls = () =>
     const jumpToggle = useGame((state: any) => state.jumpOn);
     const joystickToggle = useGame((state: any) => state.joystickOn);
 
+    const loading = useLoadingAssets();
+    const [showControls, setShowControls] = useState(false)
+
+  useEffect(()=>{
+    if (!loading) {
+      window.setTimeout(() => {
+        setShowControls(true)
+      }, 1750);
+    }
+  }, [loading])
+
     return (
       <>
-        {joystickToggle && (
+        {joystickToggle && showControls && (
           <EcctrlJoystick
             buttonNumber={4}
             buttonGroup1Position={[-2, 0, 0]} 
