@@ -66,6 +66,3 @@ export const useControls = () => {
 
   return controls;
 };
-// function useJoystickControls(arg0: (state: { releaseAllButtons: any }) => any) {
-//   throw new Error("Function not implemented.");
-// }

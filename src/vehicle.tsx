@@ -1,5 +1,4 @@
 import {
-  // Edges,
   useGLTF,
 } from "@react-three/drei";
 import {
@@ -35,8 +34,6 @@ import {
 // import chassisDracoUrl from "./assets/chassis-draco.glb?url";
 import { LEVA_KEY } from "./constants";
 import { RapierRaycastVehicle, WheelOptions } from "./rapier-raycast-vehicle";
-// import PmndrsVan from "./PmndrsVan";
-
 // import wheelGlbUrl from "./assets/wheel-draco.glb?url";
 import { Helper } from "./helper";
 

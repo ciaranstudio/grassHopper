@@ -1,9 +1,6 @@
 import {
   OrbitControls,
   Sky,
-  // Clouds,
-  // Cloud,
-  // useHelper,
 } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
@@ -14,8 +11,6 @@ import styled from "styled-components";
 import {
   Quaternion,
   Vector3,
-  // MeshBasicMaterial,
-  // DirectionalLightHelper,
 } from "three";
 import { Canvas } from "./canvas";
 import { usePageVisible } from "./use-page-visible";
@@ -28,11 +23,8 @@ import {
   RAPIER_UPDATE_PRIORITY,
 } from "./constants";
 import { SpeedTextTunnel } from "./speed-text-tunnel";
-// import { useControls } from "./use-controls";
 import Interface from "./Interface";
-// import { useJoystickControls } from "ecctrl";
 import useGame from "./stores/useGame";
-// import { reverse } from "dns";
 import { useProgress } from "@react-three/drei";
 import gsap from "gsap";
 import * as THREE from "three";
@@ -111,7 +103,6 @@ const Scene = () => {
             setOverlayAlpha(overlayOpacity.value);
           },
           // onComplete: () => {
-          //   setOverlayAlpha(overlayOpacity.value);
           // },
         });
         // update loadingBarElement
@@ -125,14 +116,10 @@ const Scene = () => {
 
   const raycastVehicle = useRef<VehicleRef>(null);
   const currentSpeedTextDiv = useRef<HTMLDivElement>(null);
-
   const camera = useThree((state) => state.camera);
   const currentCameraPosition = useRef(new Vector3(15, 15, 0));
   const currentCameraLookAt = useRef(new Vector3());
-
   const dirLight: any = useRef();
-  // useHelper(dirLight, DirectionalLightHelper, 1, "red");
-  // const controls = useControls();
 
   const { cameraMode } = useLeva(`${LEVA_KEY}-camera`, {
     cameraMode: {
@@ -147,7 +134,6 @@ const Scene = () => {
     maxBrake: 1, //  was 2 originally
   });
 
-  // const joystickToggle = useGame((state: any) => state.joystickOn);
   const gasToggle = useGame((state: any) => state.gasOn);
   const reverseToggle = useGame((state: any) => state.reverseOn);
   const brakeToggle = useGame((state: any) => state.brakeOn);
@@ -283,40 +269,11 @@ const Scene = () => {
       </SpeedTextTunnel.In>
 
       {/* raycast vehicle */}
-    {/* <Suspense> */}
       <Vehicle
         ref={raycastVehicle}
         position={[0, 4, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
-{/* </Suspense> */}
-      {/* ramp */}
-      {/* <RigidBody type="fixed">
-        <mesh rotation-x={-0.3} position={[0, -1, 30]}>
-          <boxGeometry args={[10, 1, 10]} />
-          <meshStandardMaterial color="orange" />
-        </mesh>
-      </RigidBody> */}
-
-      {/* bumps */}
-      {/* <group position={[0, 0, 50]}>
-        {Array.from({ length: 6 }).map((_, idx) => (
-          <RigidBody
-            key={idx}
-            colliders={false}
-            type="fixed"
-            mass={10}
-            rotation={[0, 0, Math.PI / 2]}
-            position={[idx % 2 === 0 ? -0.8 : 0.8, -0.42, idx * 1.5]}
-          >
-            <CylinderCollider args={[1, 0.5]} />
-            <mesh>
-              <cylinderGeometry args={[0.5, 0.5, 2]} />
-              <meshStandardMaterial color="orange" />
-            </mesh>
-          </RigidBody>
-        ))}
-      </group> */}
 
       {/* boxes */}
       {/* {Array.from({ length: 6 }).map((_, idx) => (
@@ -327,22 +284,11 @@ const Scene = () => {
           </mesh>
         </RigidBody>
       ))} */}
+
       <Grass />
-      {/* <hemisphereLight intensity={0.75} /> */}
+      <Sky distance={3500} sunPosition={[50, 30, 50]} rayleigh={0.3} />
+
       <ambientLight intensity={0.25} />
-      {/* <Environment preset="night" /> */}
-      {/* <pointLight
-        intensity={500}
-        decay={1.5}
-        position={[10, 20, 10]}
-        castShadow
-        shadow-camera-top={8}
-        shadow-camera-right={8}
-        shadow-camera-bottom={-8}
-        shadow-camera-left={-8}
-        shadow-mapSize-height={2048}
-        shadow-mapSize-width={2048}
-      /> */}
       <directionalLight
         ref={dirLight}
         castShadow
@@ -352,26 +298,12 @@ const Scene = () => {
         // target={raycastVehicle.current}
       />
 
-      {/* <Stars /> */}
-      <Sky distance={3500} sunPosition={[50, 30, 50]} rayleigh={0.3} />
-      {/* <Clouds material={MeshBasicMaterial} position={[0, 25, 0]}>
-        <Cloud
-          fade={0}
-          segments={40}
-          bounds={[40, 5, 40]}
-          volume={30}
-          color="white"
-          concentrate="outside"
-        />
-      </Clouds> */}
-
       {cameraMode === "orbit" && <OrbitControls />}
     </>
   );
 };
 
 export default () => {
-  
   const loading = useLoadingAssets();
   const visible = usePageVisible();
 
@@ -379,10 +311,8 @@ export default () => {
     debug: false,
   });
 
-  // const joystickToggle = useGame((state: any) => state.joystickOn);
   const toggleJoystickOn = useGame((state) => state.toggleJoystickOn);
   const toggleJoystickOff = useGame((state) => state.toggleJoystickOff);
-
   // const [isTouchScreen, setIsTouchScreen] = useState(false);
 
   useEffect(() => {

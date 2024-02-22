@@ -466,14 +466,6 @@ export default () => {
   return (
     <>
       <Grass />
-
-      {/* <Sky sunPosition={[10, 5, 10]} rayleigh={0.3} /> */}
-      {/* <Clouds material={THREE.MeshBasicMaterial} position={[0,115,0]} limit={10}>
-  <Cloud segments={40} bounds={[200, 50, 200]} volume={100} color="white" concentrate="random" />
-
-</Clouds> */}
-      {/* <Environment files={} /> */}
-
       {/* <OrbitControls makeDefault autoRotate autoRotateSpeed={0.25} target={[0, 3, 0]} />
             <CameraShake maxRoll={0} maxPitch={0.05} maxYaw={0.05} /> */}
     </>

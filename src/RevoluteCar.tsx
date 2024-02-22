@@ -21,16 +21,13 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-// import styled from "styled-components";
 import { Quaternion, Vector3, Vector3Tuple, Vector4Tuple } from "three";
 import { Canvas } from "./canvas";
 import { usePageVisible } from "./use-page-visible";
 import Grass from "./Grass";
 import { useJoystickControls } from "ecctrl";
-// import PlatformPattern from "./PlatformPattern";
 import useGame from "./stores/useGame.jsx";
 import Interface from "./Interface";
-// import PmndrsVan from "./PmndrsVan";
 
 const LEVA_KEY = "rapier-revolute-joint-vehicle";
 
@@ -58,95 +55,6 @@ const AXLE_TO_CHASSIS_JOINT_DAMPING = 20;
 
 const DRIVEN_WHEEL_FORCE = 1600;
 const DRIVEN_WHEEL_DAMPING = 10;
-
-// const JointedThing = () => {
-//   const bodyA = useRef(null);
-//   const bodyB = useRef(null);
-//   const bodyC = useRef(null);
-//   const bodyD = useRef(null);
-
-//   const jointFront = useRevoluteJoint(bodyA, bodyB, [
-//     // Position of the joint in bodyA's local space
-//     [0, 4, 0],
-//     // Position of the joint in bodyB's local space
-//     [0, 0, 0],
-//     // Axis of the joint, expressed in the local-space of
-//     // the rigid-bodies it is attached to. Cannot be [0,0,0].
-//     [0, 4, 0],
-//   ]);
-//   const jointBack = useRevoluteJoint(bodyC, bodyD, [
-//     // Position of the joint in bodyA's local space
-//     [0, 4, 0],
-//     // Position of the joint in bodyB's local space
-//     [0, 0, 0],
-//     // Axis of the joint, expressed in the local-space of
-//     // the rigid-bodies it is attached to. Cannot be [0,0,0].
-//     [0, 4, 0],
-//   ]);
-//   useFrame(() => {
-//     if (jointFront.current) {
-//       jointFront.current.configureMotorVelocity(10, 2);
-//     }
-//     if (jointBack.current) {
-//       jointBack.current.configureMotorVelocity(10, 2);
-//     }
-//   });
-
-//   return (
-//     <>
-//       <group position={[0, 20, 0]}>
-//         <RigidBody ref={bodyA} colliders={false} mass={100} restitution={0}>
-//           <mesh>
-//             <cylinderGeometry />
-//             <meshBasicMaterial color="#ff0000" />
-//           </mesh>
-//           <CylinderCollider
-//             mass={2.5}
-//             friction={1.5}
-//             args={[0.5, 1]}
-//             // rotation={[-Math.PI / 2, 0, 0]}
-//           />
-//         </RigidBody>
-//         <RigidBody ref={bodyB} colliders={false} mass={100} restitution={0}>
-//           <mesh>
-//             <cylinderGeometry />
-//             <meshBasicMaterial color="#0000ff" />
-//           </mesh>
-//           <CylinderCollider
-//             mass={2.5}
-//             friction={1.5}
-//             args={[0.5, 1]}
-//             // rotation={[-Math.PI / 2, 0, 0]}
-//           />
-//         </RigidBody>
-//         <RigidBody ref={bodyC} colliders={false} mass={100} restitution={0}>
-//           <mesh>
-//             <cylinderGeometry />
-//             <meshBasicMaterial color="#00ff00" />
-//           </mesh>
-//           <CylinderCollider
-//             mass={2.5}
-//             friction={1.5}
-//             args={[0.5, 1]}
-//             // rotation={[-Math.PI / 2, 0, 0]}
-//           />
-//         </RigidBody>
-//         <RigidBody ref={bodyD} colliders={false} mass={100} restitution={0}>
-//           <mesh>
-//             <cylinderGeometry />
-//             <meshBasicMaterial color="#ffffff" />
-//           </mesh>
-//           <CylinderCollider
-//             mass={2.5}
-//             friction={1.5}
-//             args={[0.5, 1]}
-//             // rotation={[-Math.PI / 2, 0, 0]}
-//           />
-//         </RigidBody>
-//       </group>
-//     </>
-//   );
-// };
 
 type FixedJointProps = {
   body: RefObject<RapierRigidBody>;
@@ -203,14 +111,6 @@ const AxleJoint = ({
     wheelAnchor,
     rotationAxis,
   ]);
-  // const getJoystickValues = useJoystickControls(
-  //   (state: { getJoystickValues: any }) => state.getJoystickValues
-  // );
-
-  // const setJoystick = useJoystickControls((state: any) => state.setJoystick);
-  // const pressButton2 = useJoystickControls(
-  //   (state: { pressButton2: any }) => state.pressButton2
-  // );
 
   const joyDis = useJoystickControls(
     (state: { curJoystickDis: any }) => state.curJoystickDis
@@ -320,12 +220,10 @@ const AxleJoint = ({
     joyButton2,
   ]);
 
-  // check useGame store is working for gasOn and reverseOn state values
   useEffect(() => {
     const unsubscribeToggleGas = useGame.subscribe(
       (state) => state.gasOn,
       (value) => {
-        // if (value) toggleGasOn();
         console.log("gasOn store value: ", value);
       }
     );
@@ -333,7 +231,6 @@ const AxleJoint = ({
     const unsubscribeToggleReverse = useGame.subscribe(
       (state) => state.reverseOn,
       (value) => {
-        // if (value) toggleReverseOn();
         console.log("reverseOn store value: ", value);
       }
     );
@@ -383,16 +280,7 @@ const SteeredJoint = ({
   const left = useKeyboardControls((state) => state.left);
   const right = useKeyboardControls((state) => state.right);
   const targetPos = left ? 0.2 : right ? -0.2 : 0;
-  // const targetPosJoy =
-  //   joyAng > Math.PI && joyAng < (Math.PI / 2) * 3
-  //     ? ((joyAng - Math.PI) / (Math.PI / 2)) * 0.2
-  //     : joyAng < Math.PI && joyAng > Math.PI / 2
-  //     ? ((joyAng - Math.PI / 2) / (Math.PI / 2)) * 0.2
-  //     : joyAng < Math.PI / 2 && joyAng > 0
-  //     ? (joyAng / (Math.PI / 2)) * -0.2
-  //     : joyAng < Math.PI * 2 && joyAng > (Math.PI / 2) * 3
-  //     ? ((joyAng - (Math.PI / 2) * 3) / (Math.PI / 2)) * -0.2
-  //     : 0;
+
   const targetPosJoy =
     // left half (top and bottom quadrants) of joystick circle
     joyAng <= (Math.PI / 2) * 3 && joyAng >= Math.PI / 2
@@ -598,50 +486,9 @@ const RevoluteJointVehicle = () => {
   );
 };
 
-// const randBetween = (min: number, max: number) => Math.random() * (max - min) + min
-
 const Scene = () => {
-  // const nSpheres = 5
-  // const spherePositions: [number, number, number][] = useMemo(
-  //     () => Array.from({ length: nSpheres }).map(() => [randBetween(-5, -20), randBetween(1, 5), randBetween(-5, 5)]),
-  //     [],
-  // )
-  // const sphereArgs: [number][] = useMemo(() => Array.from({ length: nSpheres }).map(() => [randBetween(0.5, 1.2)]), [])
-  // const rampRotationZ = Math.PI / 8;
-  // const rampWidth = 12;
-  // const rampConnectorY = 1.25;
   return (
     <>
-      {/* spheres */}
-      {/* {Array.from({ length: nSpheres }).map((_, idx) => (
-                <RigidBody key={idx} colliders="ball" mass={0.1} position={spherePositions[idx]}>
-                    <mesh castShadow>
-                        <sphereGeometry args={sphereArgs[idx]} />
-                        <meshStandardMaterial color="orange" />
-                    </mesh>
-                </RigidBody>
-            ))} */}
-
-      {/* boxes */}
-      {/* {Array.from({ length: 6 }).map((_, idx) => (
-                <RigidBody key={idx} colliders="cuboid" mass={0.2} position={[-28, 0.5 + idx * 2.2, Math.floor(idx / 2) - 1]}>
-                    <mesh>
-                        <boxGeometry args={[1, 2, 1]} />
-                        <meshStandardMaterial color="orange" />
-                    </mesh>
-                </RigidBody>
-            ))} */}
-      {/* <RigidBody
-        type="dynamic"
-        friction={0.5}
-        colliders="cuboid"
-        // rotation-y={-Math.PI / 4}
-        mass={100}
-      >
-        <PlatformPattern positionOffset={61} startingHeight={5.5} />
-      </RigidBody> */}
-
-      {/* boxes (placeholders for art objects to 'visit' by driving close to with van vehicle) */}
       <Edges />
       <RigidBody colliders="cuboid" mass={10} position={[0, 5, -50]}>
         <mesh>
@@ -676,16 +523,7 @@ const Scene = () => {
       </RigidBody>
 
       {/* ground */}
-      {/* <RigidBody type="fixed" friction={0} position-y={-2} colliders="trimesh">
-                <mesh receiveShadow>
-                    <boxGeometry args={[150, 2, 150]} />
-              
-                    <meshStandardMaterial color="#ccc" />
-                </mesh> */}
       <Grass />
-
-      {/* </RigidBody> */}
-      {/* <gridHelper args={[150, 15]} position-y={-0.99} /> */}
 
       {/* lights */}
       <ambientLight intensity={1.5} />
@@ -705,24 +543,7 @@ const Scene = () => {
   );
 };
 
-// const ControlsText = styled.div`
-//   position: absolute;
-//   bottom: 4em;
-//   left: 0;
-//   width: 100%;
-//   text-align: center;
-//   font-size: 1em;
-//   color: white;
-//   font-family: monospace;
-//   text-shadow: 2px 2px black;
-// `;
-
 export default () => {
-  // useGame store to get the gasOn and reverseOn values to pass to Canvas component so joystick controls appearance will update with toggling
-  // const phase = useGame((state: any) => state.phase);
-  // const gasOn = useGame((state: any) => state.gasOn);
-  // const reverseOn = useGame((state: any) => state.reverseOn);
-
   const visible = usePageVisible();
 
   const { debug } = useControls(`${LEVA_KEY}-debug`, {
@@ -731,14 +552,6 @@ export default () => {
 
   const [isTouchScreen, setIsTouchScreen] = useState(false);
   useEffect(() => {
-    // console.log(
-    //   "starting with gasOn (useGame): ",
-    //   gasOn,
-    //   " - reverseOn (useGame): ",
-    //   reverseOn,
-    //   " phase: ",
-    //   phase
-    // );
     // Check if using a touch control device, show/hide joystick
     if ("ontouchstart" in window || navigator.maxTouchPoints > 0) {
       setIsTouchScreen(true);
@@ -782,10 +595,6 @@ export default () => {
             maxVelocityIterations={100}
           >
             <RevoluteJointVehicle />
-            {/* <JointedThing /> */}
-
-            {/* <PmndrsVan /> */}
-
             <Scene />
           </Physics>
         </Canvas>

@@ -61,37 +61,32 @@ export default function Interface() {
 
   useEffect(() => {
     const unsubscribeEffect = addEffect(() => {
-      const { joystickOn } = useGame.getState();
-      // const joyValues = getJoystickValues();
+      const { joystickOn } = useGame.getState(); 
       if (!joystickOn) {
         if (controls.current.forward) {
           toggleGasOn();
           toggleReverseOff();
         } else {
           toggleGasOff();
-        }
-        // setBack(controls.current.back);
+        }  
         if (controls.current.back) {
           toggleReverseOn();
           toggleGasOff();
         } else {
           toggleReverseOff();
-        }
-        // setLeft(controls.current.left);
+        } 
         if (controls.current.left) {
           toggleLeftOn();
           toggleRightOff();
         } else {
           toggleLeftOff();
-        }
-        // setRight(controls.current.right);
+        }  
         if (controls.current.right) {
           toggleLeftOff();
           toggleRightOn();
         } else {
           toggleRightOff();
-        }
-        // setBrake(controls.current.brake);
+        }   
         if (controls.current.brake) {
           toggleBrakeOn();
         } else {
@@ -114,15 +109,13 @@ export default function Interface() {
     if (joystickOn) {
       if (joystickButton4) {
         toggleJumpOn();
-        setTimeout(() => {
-          // console.log("Delayed with timeout.");
+        setTimeout(() => {     
           toggleJumpOff();
         }, 80);
       } else {
         toggleJumpOff();
       }
-      if (joystickButton2) {
-        // console.log("joyButton2 pressed and gasOn: ", gasOn);
+      if (joystickButton2) {  
         if (gasOn) {
           toggleGasOff();
         } else if (!gasOn) {
@@ -130,8 +123,7 @@ export default function Interface() {
           toggleReverseOff();
         }
       }
-      if (joystickButton1) {
-        // console.log("joyButton1 pressed and reverseOn: ", reverseOn);
+      if (joystickButton1) {     
         if (reverseOn) {
           toggleReverseOff();
         } else if (!reverseOn) {
@@ -145,8 +137,7 @@ export default function Interface() {
         toggleBrakeOff();
       }
 
-      if (joystickDis > 0) {
-        // console.log("joyDis: ", joystickDis, " / joyAng: ", joystickAng);
+      if (joystickDis > 0) {    
 
         if (joystickAng >= Math.PI / 2 && joystickAng <= (Math.PI / 2) * 3) {
           toggleLeftOn();
