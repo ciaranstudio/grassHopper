@@ -9,7 +9,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 
 import { Physics, useBeforePhysicsStep } from "@react-three/rapier";
 import { Leva, useControls as useLeva } from "leva";
-import { useEffect, useRef } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import {
   Quaternion,
@@ -33,6 +33,9 @@ import Interface from "./Interface";
 // import { useJoystickControls } from "ecctrl";
 import useGame from "./stores/useGame";
 // import { reverse } from "dns";
+import { useProgress } from "@react-three/drei";
+import gsap from "gsap";
+import * as THREE from "three";
 
 const Text = styled.div`
   width: 100%;
@@ -61,7 +64,65 @@ const cameraIdealLookAt = new Vector3();
 const chassisTranslation = new Vector3();
 const chassisRotation = new Quaternion();
 
-const Game = () => {
+const Scene = () => {
+  const loadingBarElement = document.querySelector<HTMLElement>(".loading-bar");
+  const { 
+    // active, 
+    progress, 
+    // errors, 
+    // item, 
+    // loaded, 
+    // total 
+  } = useProgress();
+  const overlayOpacity = { value: 1 };
+  const [overlayAlpha, setOverlayAlpha] = useState(1);
+  const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1);
+  const overlayMaterial = new THREE.ShaderMaterial({
+    transparent: true,
+    uniforms: {
+      uAlpha: { value: overlayAlpha },
+    },
+    vertexShader: `
+        void main()
+        {
+            gl_Position = vec4(position, 1.0);
+        }
+    `,
+    fragmentShader: `
+        uniform float uAlpha;
+
+        void main()
+        {
+            gl_FragColor = vec4(0.153, 0.153, 0.102, uAlpha);
+        }
+    `,
+  });
+
+  useEffect(() => {
+    loadingBarElement!.style.transform = `scaleX(${progress / 100})`;
+    if (progress == 100) {
+      window.setTimeout(() => {
+        // animate overlay
+        gsap.to(overlayOpacity, {
+          duration: 6,
+          value: 0,
+          delay: 1,
+          onUpdate: () => {
+            setOverlayAlpha(overlayOpacity.value);
+          },
+          // onComplete: () => {
+          //   setOverlayAlpha(overlayOpacity.value);
+          // },
+        });
+        // update loadingBarElement
+        loadingBarElement!.classList.add("ended");
+        loadingBarElement!.style.transform = "";
+      }, 500);
+    }
+    console.log(overlayGeometry);
+  }, [progress]);
+
+
   const raycastVehicle = useRef<VehicleRef>(null);
   const currentSpeedTextDiv = useRef<HTMLDivElement>(null);
 
@@ -216,18 +277,19 @@ const Game = () => {
 
   return (
     <>
+     <mesh geometry={overlayGeometry} material={overlayMaterial}></mesh>
       <SpeedTextTunnel.In>
         <SpeedText ref={currentSpeedTextDiv} />
       </SpeedTextTunnel.In>
 
       {/* raycast vehicle */}
-
+    {/* <Suspense> */}
       <Vehicle
         ref={raycastVehicle}
         position={[0, 4, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
-
+{/* </Suspense> */}
       {/* ramp */}
       {/* <RigidBody type="fixed">
         <mesh rotation-x={-0.3} position={[0, -1, 30]}>
@@ -309,6 +371,7 @@ const Game = () => {
 };
 
 export default () => {
+  
   const loading = useLoadingAssets();
   const visible = usePageVisible();
 
@@ -343,6 +406,8 @@ export default () => {
 
   return (
     <>
+      <Suspense fallback={null}>
+
       <Canvas
         camera={{ fov: 60, position: [0, 30, -20] }}
         shadows
@@ -353,7 +418,7 @@ export default () => {
         //   e.preventDefault;
         // }}
       >
-        <color attach="background" args={["#000"]} />
+        <color attach="background" args={["#27271a"]} />
 
         <Physics
           gravity={[0, -9.81, 0]}
@@ -365,15 +430,17 @@ export default () => {
           // joint-erp={0.25} // ^
           paused={!visible || loading}
           debug={debug}
-        >
-          <Game />
+        > 
+          <Scene />
         </Physics>
       </Canvas>
+     
       {/* {!isTouchScreen && <Interface />} */}
       <Interface />
       <Leva hidden collapsed />
       <SpeedTextTunnel.Out />
       {/* <ControlsText>use wasd to drive, space to break</ControlsText> */}
+      </Suspense>
     </>
   );
 };

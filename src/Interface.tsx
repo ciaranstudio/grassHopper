@@ -183,16 +183,16 @@ export default function Interface() {
       {/* Controls */}
       <div className="controls">
         <div className="raw">
-          <div className={`key ${gasToggle ? "active" : ""}`}></div>
+          <div className={`key ${gasToggle ? "active" : ""}`}>W</div>
         </div>
         <div className="raw">
-          <div className={`key ${leftToggle ? "active" : ""}`}></div>
-          <div className={`key ${reverseToggle ? "active" : ""}`}></div>
-          <div className={`key ${rightToggle ? "active" : ""}`}></div>
+          <div className={`key ${leftToggle ? "active" : ""}`}>A</div>
+          <div className={`key ${reverseToggle ? "active" : ""}`}>S</div>
+          <div className={`key ${rightToggle ? "active" : ""}`}>D</div>
         </div>
         <div className="raw">
-          <div className={`key large ${brakeToggle ? "active" : ""}`}></div>
-          <div className={`key ${jumpToggle ? "active" : ""}`}></div>
+          <div className={`key large ${brakeToggle ? "active" : ""}`}>SPACE</div>
+          <div className={`key ${jumpToggle ? "active" : ""}`}>J</div>
         </div>
       </div>
     </div>
