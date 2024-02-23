@@ -42,7 +42,7 @@ export default create(
       joystickOn: false,
       gasOn: false,
       reverseOn: false,
-      brakeOn: false,
+      brakeOn: true,
       leftOn: false,
       rightOn: false,
       jumpOn: false,

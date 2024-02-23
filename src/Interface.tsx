@@ -9,6 +9,7 @@ export interface InterfaceProps {
 }
 
 export default function Interface() {
+  // should i unsubscribe this from inside useEffect hook?
   const joystickToggle = useGame((state: any) => state.joystickOn);
   const gasToggle = useGame((state: any) => state.gasOn);
   const reverseToggle = useGame((state: any) => state.reverseOn);
@@ -58,54 +59,11 @@ export default function Interface() {
   const toggleJumpOff = useGame((state) => state.toggleJumpOff);
 
   const controls = useControls();
-
+  // TBC but it appears that joystick controls have their own auto subscribe / unsubscribe
   useEffect(() => {
-    const unsubscribeEffect = addEffect(() => {
-      const { joystickOn } = useGame.getState();
-      if (!joystickOn) {
-        if (controls.current.forward) {
-          toggleGasOn();
-          toggleReverseOff();
-        } else {
-          toggleGasOff();
-        }
-        if (controls.current.back) {
-          toggleReverseOn();
-          toggleGasOff();
-        } else {
-          toggleReverseOff();
-        }
-        if (controls.current.left) {
-          toggleLeftOn();
-          toggleRightOff();
-        } else {
-          toggleLeftOff();
-        }
-        if (controls.current.right) {
-          toggleLeftOff();
-          toggleRightOn();
-        } else {
-          toggleRightOff();
-        }
-        if (controls.current.brake) {
-          toggleBrakeOn();
-        } else {
-          toggleBrakeOff();
-        }
-        if (controls.current.jump) {
-          toggleJumpOn();
-        } else {
-          toggleJumpOff();
-        }
-      }
-    });
-    return () => {
-      unsubscribeEffect();
-    };
-  }, []);
-
-  useEffect(() => {
-    const { gasOn, reverseOn, joystickOn } = useGame.getState();
+    // const unsubscribeEffect = addEffect(() => {
+    // const state = useGame.getState();
+    const { phase, gasOn, reverseOn, joystickOn } = useGame.getState();
     if (joystickOn) {
       if (joystickButton4) {
         toggleJumpOn();
@@ -134,7 +92,7 @@ export default function Interface() {
       if (joystickButton3) {
         toggleBrakeOn();
       } else {
-        toggleBrakeOff();
+        if (phase === "playing") toggleBrakeOff();
       }
 
       if (joystickDis > 0) {
@@ -156,6 +114,11 @@ export default function Interface() {
         toggleRightOff();
       }
     }
+    // }
+    // );
+    // return () => {
+    //   unsubscribeEffect();
+    // };
   }, [
     joystickButton1,
     joystickButton2,
@@ -164,6 +127,113 @@ export default function Interface() {
     joystickDis,
     joystickAng,
   ]);
+
+  useEffect(() => {
+    const unsubscribeEffect = addEffect(() => {
+      const { joystickOn } = useGame.getState();
+      const { phase } = useGame.getState();
+      if (!joystickOn) {
+        if (controls.current.forward) {
+          toggleGasOn();
+          toggleReverseOff();
+        } else {
+          toggleGasOff();
+        }
+        if (controls.current.back) {
+          toggleReverseOn();
+          toggleGasOff();
+        } else {
+          toggleReverseOff();
+        }
+        if (controls.current.left) {
+          toggleLeftOn();
+          toggleRightOff();
+        } else {
+          toggleLeftOff();
+        }
+        if (controls.current.right) {
+          toggleLeftOff();
+          toggleRightOn();
+        } else {
+          toggleRightOff();
+        }
+        if (controls.current.brake) {
+          toggleBrakeOn();
+        } else {
+          if (phase === "playing") toggleBrakeOff();
+        }
+        if (controls.current.jump) {
+          toggleJumpOn();
+        } else {
+          toggleJumpOff();
+        }
+      }
+    });
+    return () => {
+      unsubscribeEffect();
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   const { gasOn, reverseOn, joystickOn } = useGame.getState();
+  //   if (joystickOn) {
+  //     if (joystickButton4) {
+  //       toggleJumpOn();
+  //       setTimeout(() => {
+  //         toggleJumpOff();
+  //       }, 80);
+  //     } else {
+  //       toggleJumpOff();
+  //     }
+  //     if (joystickButton2) {
+  //       if (gasOn) {
+  //         toggleGasOff();
+  //       } else if (!gasOn) {
+  //         toggleGasOn();
+  //         toggleReverseOff();
+  //       }
+  //     }
+  //     if (joystickButton1) {
+  //       if (reverseOn) {
+  //         toggleReverseOff();
+  //       } else if (!reverseOn) {
+  //         toggleReverseOn();
+  //         toggleGasOff();
+  //       }
+  //     }
+  //     if (joystickButton3) {
+  //       toggleBrakeOn();
+  //     } else {
+  //       toggleBrakeOff();
+  //     }
+
+  //     if (joystickDis > 0) {
+  //       if (joystickAng >= Math.PI / 2 && joystickAng <= (Math.PI / 2) * 3) {
+  //         toggleLeftOn();
+  //         toggleRightOff();
+  //       } else if (joystickAng < Math.PI / 2 && joystickAng >= 0) {
+  //         toggleLeftOff();
+  //         toggleRightOn();
+  //       } else if (
+  //         joystickAng <= Math.PI * 2 &&
+  //         joystickAng > (Math.PI / 2) * 3
+  //       ) {
+  //         toggleLeftOff();
+  //         toggleRightOn();
+  //       }
+  //     } else if (joystickDis === 0) {
+  //       toggleLeftOff();
+  //       toggleRightOff();
+  //     }
+  //   }
+  // }, [
+  //   joystickButton1,
+  //   joystickButton2,
+  //   joystickButton3,
+  //   joystickButton4,
+  //   joystickDis,
+  //   joystickAng,
+  // ]);
 
   const [time, setTime] = useState("0");
   const restart = useGame((state) => state.restart);

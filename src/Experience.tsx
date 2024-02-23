@@ -70,6 +70,7 @@ const Scene = () => {
     maxBrake: 1, //  was 2 originally
   });
 
+  // unsubscribe from this?
   const gasToggle = useGame((state: any) => state.gasOn);
   const reverseToggle = useGame((state: any) => state.reverseOn);
   const brakeToggle = useGame((state: any) => state.brakeOn);
@@ -197,12 +198,35 @@ const Scene = () => {
     camera.lookAt(currentCameraLookAt.current);
   }, AFTER_RAPIER_UPDATE);
 
-  // adding in phase (useGame store) updates
+  // phase updates
   const start = useGame((state) => state.start);
   const end = useGame((state) => state.end);
   const restart = useGame((state) => state.restart);
 
+  // const toggleGasOn = useGame((state) => state.toggleGasOn);
+  const toggleGasOff = useGame((state) => state.toggleGasOff);
+  // const toggleReverseOn = useGame((state) => state.toggleReverseOn);
+  const toggleReverseOff = useGame((state) => state.toggleReverseOff);
+  const toggleBrakeOn = useGame((state) => state.toggleBrakeOn);
+  // const toggleBrakeOff = useGame((state) => state.toggleBrakeOff);
+  // const toggleRightOn = useGame((state) => state.toggleRightOn);
+  const toggleRightOff = useGame((state) => state.toggleRightOff);
+  // const toggleLeftOn = useGame((state) => state.toggleLeftOn);
+  const toggleLeftOff = useGame((state) => state.toggleLeftOff);
+  // const toggleJumpOn = useGame((state) => state.toggleJumpOn);
+  const toggleJumpOff = useGame((state) => state.toggleJumpOff);
+
+  const resetStoreControls = () => {
+    toggleGasOff();
+    toggleReverseOff();
+    toggleBrakeOn();
+    toggleRightOff();
+    toggleLeftOff();
+    toggleJumpOff();
+  };
+
   const reset = () => {
+    resetStoreControls();
     raycastVehicle.current?.chassisRigidBody.current?.setTranslation(
       { x: 0, y: 10, z: 0 },
       true,
@@ -226,6 +250,7 @@ const Scene = () => {
     );
     raycastVehicle.current?.chassisRigidBody.current?.resetForces(true);
     raycastVehicle.current?.chassisRigidBody.current?.resetTorques(true);
+    // reset car controls: brake, gas, right, left, jump
   };
 
   useEffect(() => {
