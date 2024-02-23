@@ -181,12 +181,9 @@ export default function Interface() {
         elapsedTime = state.endTime - state.startTime;
 
       elapsedTime /= 1000;
-      // elapsedTime = elapsedTime.toFixed(2)
       elapsedTimeString = elapsedTime.toFixed(0);
-      if (elapsedTime > 0) {
-        setTime(elapsedTimeString);
-        console.log("time: ", time);
-      }
+      setTime(elapsedTimeString);
+      console.log("time: ", time);
     });
 
     return () => {

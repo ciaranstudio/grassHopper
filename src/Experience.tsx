@@ -21,7 +21,6 @@ import useGame from "./stores/useGame";
 import { useProgress } from "@react-three/drei";
 // import gsap from "gsap";
 // import * as THREE from "three";
-import { useKeyboardControls } from "@react-three/drei";
 
 const Text = styled.div`
   width: 100%;
@@ -198,11 +197,7 @@ const Scene = () => {
     camera.lookAt(currentCameraLookAt.current);
   }, AFTER_RAPIER_UPDATE);
 
-  // adding in phases (useGame store) update
-
-  // replace this with checking to see if any useGame toggles have received user input / changed
-  const [subscribeKeys, _] = useKeyboardControls();
-
+  // adding in phase (useGame store) updates
   const start = useGame((state) => state.start);
   const end = useGame((state) => state.end);
   const restart = useGame((state) => state.restart);
@@ -242,6 +237,13 @@ const Scene = () => {
       },
     );
 
+    const unsubscribeInput = useGame.subscribe(
+      (state) => state.gasOn,
+      (value) => {
+        if (value === true) start();
+      },
+    );
+
     // const unsubscribeJump = subscribeKeys(
     //     (state) => state.jump,
     //     (value) =>
@@ -251,15 +253,10 @@ const Scene = () => {
     //     }
     // )
 
-    // replace this with checking to see if any useGame toggles have received user input / changed
-    const unsubscribeAny = subscribeKeys(() => {
-      start();
-    });
-
     return () => {
       unsubscribeReset();
       // unsubscribeJump()
-      unsubscribeAny();
+      unsubscribeInput();
     };
   }, []);
 
@@ -353,18 +350,10 @@ export default () => {
   // const toggleBrakeOn = useGame((state) => state.toggleBrakeOn);
   // toggleBrakeOn();
   // const toggleBrakeOff = useGame((state) => state.toggleBrakeOff);
-
   //  const pressButton3 = useJoystickControls(
   //     (state: { pressButton3: any }) => state.pressButton3
   //   );
-
-  // useEffect(()=>{
-  //   if (!loading) {
-  //     window.setTimeout(() => {
-  //       setShowControls(true);
-  //     }, 2250);
-  //   }
-  // }, [loading])
+  // const phase = useGame((state) => state.phase)
 
   const loadingBarElement = document.querySelector<HTMLElement>(".loading-bar");
   const {
@@ -400,7 +389,6 @@ export default () => {
   //   `,
   // });
 
-  // const phase = useGame((state) => state.phase)
   useEffect(() => {
     loadingBarElement!.style.transform = `scaleX(${progress / 100})`;
     if (!loading) {

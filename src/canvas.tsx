@@ -5,9 +5,6 @@ import useGame from "./stores/useGame";
 import { useLoadingAssets } from "./use-loading-assets";
 import { useState, useEffect } from "react";
 
-// don't really need this, use current controls instead, replace keyboard controls subscriptions
-import { KeyboardControls } from "@react-three/drei";
-
 export interface CustomJoystickProps {}
 
 const EcctrlJoystickControls = () =>
@@ -56,18 +53,8 @@ export const Canvas = ({
   // props: PropsWithChildren<CustomJoystickProps>
   <>
     <EcctrlJoystickControls />
-    <KeyboardControls
-      map={[
-        { name: "forward", keys: ["ArrowUp", "KeyW"] },
-        { name: "backward", keys: ["ArrowDown", "KeyS"] },
-        { name: "leftward", keys: ["ArrowLeft", "KeyA"] },
-        { name: "rightward", keys: ["ArrowRight", "KeyD"] },
-        { name: "jump", keys: ["Space"] },
-      ]}
-    >
-      <R3FCanvas id="gl" {...rest}>
-        {children}
-      </R3FCanvas>
-    </KeyboardControls>
+    <R3FCanvas id="gl" {...rest}>
+      {children}
+    </R3FCanvas>
   </>
 );
