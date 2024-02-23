@@ -335,11 +335,20 @@ export default () => {
     };
   }, []);
 
+  // const brakeToggle = useGame((state: any) => state.brakeOn);
+  const toggleBrakeOn = useGame((state) => state.toggleBrakeOn);
+  toggleBrakeOn();
+  // const toggleBrakeOff = useGame((state) => state.toggleBrakeOff);
+
+//  const pressButton3 = useJoystickControls(
+//     (state: { pressButton3: any }) => state.pressButton3
+//   );
+
   useEffect(()=>{
     if (!loading) {
       window.setTimeout(() => {
-        setShowControls(true)
-      }, 1750);
+        setShowControls(true);       
+      }, 2250);
     }
   }, [loading])
 
@@ -353,8 +362,8 @@ export default () => {
         // onPointerDown={(e) => {
         //   // if (e.pointerType === "mouse") {
         //   //   (e.target as HTMLCanvasElement).requestPointerLock();
-        //   // }
-        //   e.preventDefault;
+        //   // } 
+        //   e.preventDefault;     
         // }}
       >
         <color attach="background" args={["#27271a"]} />

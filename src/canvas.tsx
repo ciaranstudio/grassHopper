@@ -24,7 +24,7 @@ const EcctrlJoystickControls = () =>
     if (!loading) {
       window.setTimeout(() => {
         setShowControls(true)
-      }, 1750);
+      }, 2250);
     }
   }, [loading])
 
