@@ -8,7 +8,7 @@ export default function PmndrsVan(props: any) {
   return (
     <group {...props} dispose={null}>
       <group rotation={[Math.PI, 0, Math.PI]} scale={3.5} position={[10, 5, 0]}>
-        <group position={[0, 0.2, -0.1]}> 
+        <group position={[0, 0.2, -0.1]}>
           <mesh
             castShadow
             receiveShadow
@@ -44,29 +44,15 @@ export default function PmndrsVan(props: any) {
             receiveShadow
             geometry={(nodes.Mesh_body_5 as THREE.Mesh).geometry}
             material={materials.window}
-          />     
+          />
         </group>
-        <group position={[-0.35, 0.3, 0.76]} scale={[-1, 1, 1]}>      
+        <group position={[-0.35, 0.3, 0.76]} scale={[-1, 1, 1]}>
           <mesh
             castShadow
             receiveShadow
             geometry={(nodes.Mesh_wheel_frontLeft as THREE.Mesh).geometry}
             material={materials.carTire}
-          />      
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={(nodes.Mesh_wheel_frontLeft_1 as THREE.Mesh).geometry}
-            material={materials._defaultMat}
-          />    
-        </group>
-        <group position={[0.35, 0.3, 0.76]}>      
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={(nodes.Mesh_wheel_frontLeft as THREE.Mesh).geometry}
-            material={materials.carTire}
-          />   
+          />
           <mesh
             castShadow
             receiveShadow
@@ -74,19 +60,33 @@ export default function PmndrsVan(props: any) {
             material={materials._defaultMat}
           />
         </group>
-        <group position={[-0.35, 0.3, -0.76]} scale={[-1, 1, 1]}>  
+        <group position={[0.35, 0.3, 0.76]}>
           <mesh
             castShadow
             receiveShadow
             geometry={(nodes.Mesh_wheel_frontLeft as THREE.Mesh).geometry}
             material={materials.carTire}
-          /> 
+          />
           <mesh
             castShadow
             receiveShadow
             geometry={(nodes.Mesh_wheel_frontLeft_1 as THREE.Mesh).geometry}
             material={materials._defaultMat}
-          /> 
+          />
+        </group>
+        <group position={[-0.35, 0.3, -0.76]} scale={[-1, 1, 1]}>
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={(nodes.Mesh_wheel_frontLeft as THREE.Mesh).geometry}
+            material={materials.carTire}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={(nodes.Mesh_wheel_frontLeft_1 as THREE.Mesh).geometry}
+            material={materials._defaultMat}
+          />
         </group>
         <group position={[0.35, 0.3, -0.76]}>
           <mesh
@@ -94,7 +94,7 @@ export default function PmndrsVan(props: any) {
             receiveShadow
             geometry={(nodes.Mesh_wheel_frontLeft as THREE.Mesh).geometry}
             material={materials.carTire}
-          />  
+          />
           <mesh
             castShadow
             receiveShadow

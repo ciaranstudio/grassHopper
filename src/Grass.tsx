@@ -103,7 +103,7 @@ const computeGrassAttributes = (instances: number, width: number) => {
       tmpQuaternion_0.x,
       tmpQuaternion_0.y,
       tmpQuaternion_0.z,
-      tmpQuaternion_0.w
+      tmpQuaternion_0.w,
     );
 
     /* Height */
@@ -344,7 +344,7 @@ const Grass = () => {
 
   const attributes = useMemo(
     () => computeGrassAttributes(instances, width),
-    [instances, width]
+    [instances, width],
   );
 
   const baseGeometry = useMemo(
@@ -353,9 +353,9 @@ const Grass = () => {
         bladeWidth,
         bladeHeight,
         1,
-        bladeJoints
+        bladeJoints,
       ).translate(0, bladeHeight / 2, 0),
-    [bladeWidth, bladeHeight, bladeJoints]
+    [bladeWidth, bladeHeight, bladeJoints],
   );
 
   const { groundGeometry } = useMemo(() => {
@@ -392,7 +392,7 @@ const Grass = () => {
           <instancedBufferGeometry
             index={baseGeometry.index}
             key={[bladeWidth, bladeHeight, bladeJoints, width, instances].join(
-              "-"
+              "-",
             )}
             attributes-position={baseGeometry.attributes.position}
             attributes-uv={baseGeometry.attributes.uv}

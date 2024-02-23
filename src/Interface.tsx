@@ -2,7 +2,7 @@ import { addEffect } from "@react-three/fiber";
 import { useJoystickControls } from "ecctrl";
 import useGame from "./stores/useGame.js";
 import { useControls } from "./use-controls";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export interface InterfaceProps {
   joystickOn: boolean;
@@ -21,24 +21,24 @@ export default function Interface() {
   //   (state: { getJoystickValues: any }) => state.getJoystickValues
   // );
   const joystickDis = useJoystickControls(
-    (state: { curJoystickDis: any }) => state.curJoystickDis
+    (state: { curJoystickDis: any }) => state.curJoystickDis,
   );
   const joystickAng = useJoystickControls(
-    (state: { curJoystickAng: any }) => state.curJoystickAng
+    (state: { curJoystickAng: any }) => state.curJoystickAng,
   );
   const joystickButton1 = useJoystickControls(
-    (state: { curButton1Pressed: any }) => state.curButton1Pressed
+    (state: { curButton1Pressed: any }) => state.curButton1Pressed,
   );
   const joystickButton2 = useJoystickControls(
-    (state: { curButton2Pressed: any }) => state.curButton2Pressed
+    (state: { curButton2Pressed: any }) => state.curButton2Pressed,
   );
 
   const joystickButton3 = useJoystickControls(
-    (state: { curButton3Pressed: any }) => state.curButton3Pressed
+    (state: { curButton3Pressed: any }) => state.curButton3Pressed,
   );
 
   const joystickButton4 = useJoystickControls(
-    (state: { curButton4Pressed: any }) => state.curButton4Pressed
+    (state: { curButton4Pressed: any }) => state.curButton4Pressed,
   );
   // const pressButton3 = useJoystickControls(
   //   (state: { pressButton3: any }) => state.pressButton3
@@ -61,32 +61,32 @@ export default function Interface() {
 
   useEffect(() => {
     const unsubscribeEffect = addEffect(() => {
-      const { joystickOn } = useGame.getState(); 
+      const { joystickOn } = useGame.getState();
       if (!joystickOn) {
         if (controls.current.forward) {
           toggleGasOn();
           toggleReverseOff();
         } else {
           toggleGasOff();
-        }  
+        }
         if (controls.current.back) {
           toggleReverseOn();
           toggleGasOff();
         } else {
           toggleReverseOff();
-        } 
+        }
         if (controls.current.left) {
           toggleLeftOn();
           toggleRightOff();
         } else {
           toggleLeftOff();
-        }  
+        }
         if (controls.current.right) {
           toggleLeftOff();
           toggleRightOn();
         } else {
           toggleRightOff();
-        }   
+        }
         if (controls.current.brake) {
           toggleBrakeOn();
         } else {
@@ -109,13 +109,13 @@ export default function Interface() {
     if (joystickOn) {
       if (joystickButton4) {
         toggleJumpOn();
-        setTimeout(() => {     
+        setTimeout(() => {
           toggleJumpOff();
         }, 80);
       } else {
         toggleJumpOff();
       }
-      if (joystickButton2) {  
+      if (joystickButton2) {
         if (gasOn) {
           toggleGasOff();
         } else if (!gasOn) {
@@ -123,7 +123,7 @@ export default function Interface() {
           toggleReverseOff();
         }
       }
-      if (joystickButton1) {     
+      if (joystickButton1) {
         if (reverseOn) {
           toggleReverseOff();
         } else if (!reverseOn) {
@@ -137,8 +137,7 @@ export default function Interface() {
         toggleBrakeOff();
       }
 
-      if (joystickDis > 0) {    
-
+      if (joystickDis > 0) {
         if (joystickAng >= Math.PI / 2 && joystickAng <= (Math.PI / 2) * 3) {
           toggleLeftOn();
           toggleRightOff();
@@ -166,26 +165,69 @@ export default function Interface() {
     joystickAng,
   ]);
 
+  const [time, setTime] = useState("0");
+  const restart = useGame((state) => state.restart);
+  const phase = useGame((state) => state.phase);
+
+  useEffect(() => {
+    const unsubscribeEffect = addEffect(() => {
+      const state = useGame.getState();
+
+      let elapsedTime = 0;
+      let elapsedTimeString = "0";
+
+      if (state.phase === "playing") elapsedTime = Date.now() - state.startTime;
+      else if (state.phase === "ended")
+        elapsedTime = state.endTime - state.startTime;
+
+      elapsedTime /= 1000;
+      // elapsedTime = elapsedTime.toFixed(2)
+      elapsedTimeString = elapsedTime.toFixed(0);
+      if (elapsedTime > 0) {
+        setTime(elapsedTimeString);
+        console.log("time: ", time);
+      }
+    });
+
+    return () => {
+      unsubscribeEffect();
+    };
+  }, []);
+
   return (
-    <div
-      className="interface"
-      style={joystickToggle ? { display: "none" } : {}}
-    >
-      {/* Controls */}
-      <div className="controls">
-        <div className="raw">
-          <div className={`key ${gasToggle ? "active" : ""}`}>W</div>
+    <>
+      {/* Time */}
+      <div className="time">{time}</div>
+
+      {/* Restart */}
+      {phase === "ended" && (
+        <div className="restart" onClick={restart}>
+          Restart
         </div>
-        <div className="raw">
-          <div className={`key ${leftToggle ? "active" : ""}`}>A</div>
-          <div className={`key ${reverseToggle ? "active" : ""}`}>S</div>
-          <div className={`key ${rightToggle ? "active" : ""}`}>D</div>
-        </div>
-        <div className="raw">
-          <div className={`key large ${brakeToggle ? "active" : ""}`}>SPACE</div>
-          <div className={`key ${jumpToggle ? "active" : ""}`}>J</div>
+      )}
+
+      <div
+        className="interface"
+        style={joystickToggle ? { display: "none" } : {}}
+      >
+        {/* Controls */}
+        <div className="controls">
+          <div className="raw">
+            <div className={`key ${gasToggle ? "active" : ""}`}>W</div>
+          </div>
+          <div className="raw">
+            <div className={`key ${leftToggle ? "active" : ""}`}>A</div>
+            <div className={`key ${reverseToggle ? "active" : ""}`}>S</div>
+            <div className={`key ${rightToggle ? "active" : ""}`}>D</div>
+          </div>
+          <div className="raw">
+            <div className={`key large ${brakeToggle ? "active" : ""}`}>
+              SPACE
+            </div>
+            <div className={`key ${jumpToggle ? "active" : ""}`}>J</div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

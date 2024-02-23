@@ -42,7 +42,7 @@ export default create(
       joystickOn: false,
       gasOn: false,
       reverseOn: false,
-      brakeOn: true,
+      brakeOn: false,
       leftOn: false,
       rightOn: false,
       jumpOn: false,
@@ -166,5 +166,5 @@ export default create(
         });
       },
     };
-  })
+  }),
 );

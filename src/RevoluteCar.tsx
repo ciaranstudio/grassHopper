@@ -113,16 +113,16 @@ const AxleJoint = ({
   ]);
 
   const joyDis = useJoystickControls(
-    (state: { curJoystickDis: any }) => state.curJoystickDis
+    (state: { curJoystickDis: any }) => state.curJoystickDis,
   );
   const joyAng = useJoystickControls(
-    (state: { curJoystickAng: any }) => state.curJoystickAng
+    (state: { curJoystickAng: any }) => state.curJoystickAng,
   );
   const joyButton1 = useJoystickControls(
-    (state: { curButton1Pressed: any }) => state.curButton1Pressed
+    (state: { curButton1Pressed: any }) => state.curButton1Pressed,
   );
   const joyButton2 = useJoystickControls(
-    (state: { curButton2Pressed: any }) => state.curButton2Pressed
+    (state: { curButton2Pressed: any }) => state.curButton2Pressed,
   );
 
   const forwardPressed = useKeyboardControls((state) => state.forward);
@@ -225,14 +225,14 @@ const AxleJoint = ({
       (state) => state.gasOn,
       (value) => {
         console.log("gasOn store value: ", value);
-      }
+      },
     );
 
     const unsubscribeToggleReverse = useGame.subscribe(
       (state) => state.reverseOn,
       (value) => {
         console.log("reverseOn store value: ", value);
-      }
+      },
     );
 
     // const unsubscribeAny = subscribeKeys(() => {
@@ -271,10 +271,10 @@ const SteeredJoint = ({
   ]);
 
   const joyDis = useJoystickControls(
-    (state: { curJoystickDis: any }) => state.curJoystickDis
+    (state: { curJoystickDis: any }) => state.curJoystickDis,
   );
   const joyAng = useJoystickControls(
-    (state: { curJoystickAng: any }) => state.curJoystickAng
+    (state: { curJoystickAng: any }) => state.curJoystickAng,
   );
 
   const left = useKeyboardControls((state) => state.left);
@@ -286,28 +286,28 @@ const SteeredJoint = ({
     joyAng <= (Math.PI / 2) * 3 && joyAng >= Math.PI / 2
       ? ((joyAng - Math.PI / 2) / Math.PI) * 0.2
       : // top right quadrand of joystick circle
-      joyAng < Math.PI / 2 && joyAng >= 0
-      ? (joyAng === 0 ? Math.PI / 2 : (Math.PI / 2 - joyAng) / Math.PI) * -0.2
-      : // bottom right quadrand of joystick circle
-      joyAng <= Math.PI * 2 && joyAng > (Math.PI / 2) * 3
-      ? ((joyAng === Math.PI * 2 ? Math.PI / 2 : Math.PI * 2 - joyAng) /
-          Math.PI) *
-          -0.2 -
-        0.1
-      : 0;
+        joyAng < Math.PI / 2 && joyAng >= 0
+        ? (joyAng === 0 ? Math.PI / 2 : (Math.PI / 2 - joyAng) / Math.PI) * -0.2
+        : // bottom right quadrand of joystick circle
+          joyAng <= Math.PI * 2 && joyAng > (Math.PI / 2) * 3
+          ? ((joyAng === Math.PI * 2 ? Math.PI / 2 : Math.PI * 2 - joyAng) /
+              Math.PI) *
+              -0.2 -
+            0.1
+          : 0;
 
   useEffect(() => {
     if (joyDis > 0) {
       joint.current?.configureMotorPosition(
         targetPosJoy,
         AXLE_TO_CHASSIS_JOINT_STIFFNESS,
-        AXLE_TO_CHASSIS_JOINT_DAMPING
+        AXLE_TO_CHASSIS_JOINT_DAMPING,
       );
     } else
       joint.current?.configureMotorPosition(
         targetPos,
         AXLE_TO_CHASSIS_JOINT_STIFFNESS,
-        AXLE_TO_CHASSIS_JOINT_DAMPING
+        AXLE_TO_CHASSIS_JOINT_DAMPING,
       );
   }, [left, right, joyDis, joyAng]);
 
@@ -368,11 +368,11 @@ const RevoluteJointVehicle = () => {
   ];
 
   const wheelRefs = useRef<RefObject<RapierRigidBody>[]>(
-    wheels.map(() => createRef())
+    wheels.map(() => createRef()),
   );
 
   const axleRefs = useRef<RefObject<RapierRigidBody>[]>(
-    wheels.map(() => createRef())
+    wheels.map(() => createRef()),
   );
 
   useFrame((_, delta) => {

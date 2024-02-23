@@ -1,6 +1,4 @@
-import {
-  useGLTF,
-} from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import {
   // ConvexHullCollider,
   CuboidCollider,
@@ -201,11 +199,11 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
 
     const directionLocal = useMemo(
       () => new Vector3(...directionLocalArray),
-      [directionLocalArray]
+      [directionLocalArray],
     );
     const axleLocal = useMemo(
       () => new Vector3(...axleLocalArray),
-      [axleLocalArray]
+      [axleLocalArray],
     );
 
     const commonWheelOptions = {
@@ -222,7 +220,7 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
           chassisConnectionPointLocal: new Vector3(
             vehicleBack,
             vehicleHeight,
-            vehicleWidth * 0.5
+            vehicleWidth * 0.5,
           ),
         },
       },
@@ -233,7 +231,7 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
           chassisConnectionPointLocal: new Vector3(
             vehicleBack,
             vehicleHeight,
-            vehicleWidth * -0.5
+            vehicleWidth * -0.5,
           ),
         },
       },
@@ -244,7 +242,7 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
           chassisConnectionPointLocal: new Vector3(
             vehicleFront,
             vehicleHeight,
-            vehicleWidth * 0.5
+            vehicleWidth * 0.5,
           ),
         },
       },
@@ -255,7 +253,7 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
           chassisConnectionPointLocal: new Vector3(
             vehicleFront,
             vehicleHeight,
-            vehicleWidth * -0.5
+            vehicleWidth * -0.5,
           ),
         },
       },
@@ -270,10 +268,10 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
         material.color = braking
           ? BRAKE_LIGHTS_ON_COLOR
           : reversing
-          ? REVERSE_ON_COLOR
-          : driving
-          ? DRIVING_ON_COLOR
-          : BRAKE_LIGHTS_OFF_COLOR;
+            ? REVERSE_ON_COLOR
+            : driving
+              ? DRIVING_ON_COLOR
+              : BRAKE_LIGHTS_OFF_COLOR;
       },
       wheels,
     }));
@@ -429,10 +427,7 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
                       geometry={(nodes.Mesh_body_5 as THREE.Mesh).geometry}
                       material={materials._defaultMat}
                     >
-                      <meshPhongMaterial
-                        color={"#27271a"}
-                  
-                      />
+                      <meshPhongMaterial color={"#27271a"} />
                     </mesh>
                   </group>
                   <group position={[-0.35, 0.3, 0.76]} scale={[-1, 1, 1]}>
@@ -550,5 +545,5 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
         </group>
       </>
     );
-  }
+  },
 );

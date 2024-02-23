@@ -5,8 +5,10 @@ import useGame from "./stores/useGame";
 import { useLoadingAssets } from "./use-loading-assets";
 import { useState, useEffect } from "react";
 
-export interface CustomJoystickProps {
-}
+// don't really need this, use current controls instead, replace keyboard controls subscriptions
+import { KeyboardControls } from "@react-three/drei";
+
+export interface CustomJoystickProps {}
 
 const EcctrlJoystickControls = () =>
   // props: PropsWithChildren<CustomJoystickProps>
@@ -18,29 +20,29 @@ const EcctrlJoystickControls = () =>
     const joystickToggle = useGame((state: any) => state.joystickOn);
 
     const loading = useLoadingAssets();
-    const [showControls, setShowControls] = useState(false)
+    const [showControls, setShowControls] = useState(false);
 
-  useEffect(()=>{
-    if (!loading) {
-      window.setTimeout(() => {
-        setShowControls(true)
-      }, 2250);
-    }
-  }, [loading])
+    useEffect(() => {
+      if (!loading) {
+        window.setTimeout(() => {
+          setShowControls(true);
+        }, 500);
+      }
+    }, [loading]);
 
     return (
       <>
         {joystickToggle && showControls && (
           <EcctrlJoystick
             buttonNumber={4}
-            buttonGroup1Position={[-2, 0, 0]} 
+            buttonGroup1Position={[-2, 0, 0]}
             buttonGroup2Position={[1, 0, 0]}
             buttonGroup3Position={[-0.5, -2.1, 0]}
             buttonGroup4Position={[-0.5, 2.1, 0]}
-            buttonTop1Props={{ visible: reverseToggle }} 
-            buttonTop2Props={{ visible: gasToggle }} 
-            buttonTop3Props={{ visible: brakeToggle }} 
-            buttonTop4Props={{ visible: jumpToggle }} 
+            buttonTop1Props={{ visible: reverseToggle }}
+            buttonTop2Props={{ visible: gasToggle }}
+            buttonTop3Props={{ visible: brakeToggle }}
+            buttonTop4Props={{ visible: jumpToggle }}
           />
         )}
       </>
@@ -54,8 +56,18 @@ export const Canvas = ({
   // props: PropsWithChildren<CustomJoystickProps>
   <>
     <EcctrlJoystickControls />
-    <R3FCanvas id="gl" {...rest}>
-      {children}
-    </R3FCanvas>
+    <KeyboardControls
+      map={[
+        { name: "forward", keys: ["ArrowUp", "KeyW"] },
+        { name: "backward", keys: ["ArrowDown", "KeyS"] },
+        { name: "leftward", keys: ["ArrowLeft", "KeyA"] },
+        { name: "rightward", keys: ["ArrowRight", "KeyD"] },
+        { name: "jump", keys: ["Space"] },
+      ]}
+    >
+      <R3FCanvas id="gl" {...rest}>
+        {children}
+      </R3FCanvas>
+    </KeyboardControls>
   </>
 );

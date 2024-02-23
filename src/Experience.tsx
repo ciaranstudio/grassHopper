@@ -1,16 +1,10 @@
-import {
-  OrbitControls,
-  Sky,
-} from "@react-three/drei";
+import { OrbitControls, Sky } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Physics, useBeforePhysicsStep } from "@react-three/rapier";
 import { Leva, useControls as useLeva } from "leva";
 import { Suspense, useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import {
-  Quaternion,
-  Vector3,
-} from "three";
+import { Quaternion, Vector3 } from "three";
 import { Canvas } from "./canvas";
 import { usePageVisible } from "./use-page-visible";
 import { useLoadingAssets } from "./use-loading-assets";
@@ -27,6 +21,7 @@ import useGame from "./stores/useGame";
 import { useProgress } from "@react-three/drei";
 import gsap from "gsap";
 import * as THREE from "three";
+import { useKeyboardControls } from "@react-three/drei";
 
 const Text = styled.div`
   width: 100%;
@@ -56,64 +51,6 @@ const chassisTranslation = new Vector3();
 const chassisRotation = new Quaternion();
 
 const Scene = () => {
-  const loadingBarElement = document.querySelector<HTMLElement>(".loading-bar");
-  const { 
-    // active, 
-    progress, 
-    // errors, 
-    // item, 
-    // loaded, 
-    // total 
-  } = useProgress();
-  const overlayOpacity = { value: 1 };
-  const [overlayAlpha, setOverlayAlpha] = useState(1);
-  const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1);
-  const overlayMaterial = new THREE.ShaderMaterial({
-    transparent: true,
-    uniforms: {
-      uAlpha: { value: overlayAlpha },
-    },
-    vertexShader: `
-        void main()
-        {
-            gl_Position = vec4(position, 1.0);
-        }
-    `,
-    fragmentShader: `
-        uniform float uAlpha;
-
-        void main()
-        {
-            gl_FragColor = vec4(0.153, 0.153, 0.102, uAlpha);
-        }
-    `,
-  });
-
-  useEffect(() => {
-    loadingBarElement!.style.transform = `scaleX(${progress / 100})`;
-    if (progress == 100) {
-      window.setTimeout(() => {
-        // animate overlay
-        gsap.to(overlayOpacity, {
-          duration: 6,
-          value: 0,
-          delay: 1,
-          onUpdate: () => {
-            setOverlayAlpha(overlayOpacity.value);
-          },
-          // onComplete: () => {
-          //   // set show interface to true
-          // },
-        });
-        // update loadingBarElement
-        loadingBarElement!.classList.add("ended");
-        loadingBarElement!.style.transform = "";
-      }, 500);
-    }
-    console.log(overlayGeometry);
-  }, [progress]);
-
-
   const raycastVehicle = useRef<VehicleRef>(null);
   const currentSpeedTextDiv = useRef<HTMLDivElement>(null);
   const camera = useThree((state) => state.camera);
@@ -185,11 +122,11 @@ const Scene = () => {
       // );
       raycastVehicle.current.rapierRaycastVehicle.current.chassisRigidBody.applyImpulse(
         { x: 0, y: 10, z: 0 },
-        true
+        true,
       );
       raycastVehicle.current.rapierRaycastVehicle.current.chassisRigidBody.applyTorqueImpulse(
         { x: 20, y: 0, z: 10 },
-        true
+        true,
       );
       // raycastVehicle.current.rapierRaycastVehicle.current.chassisRigidBody.setAdditionalMass();
     }
@@ -261,9 +198,86 @@ const Scene = () => {
     camera.lookAt(currentCameraLookAt.current);
   }, AFTER_RAPIER_UPDATE);
 
+  // adding in phases (useGame store) update
+
+  // replace this with checking to see if any useGame toggles have received user input / changed
+  const [subscribeKeys, getKeys] = useKeyboardControls();
+
+  const start = useGame((state) => state.start);
+  const end = useGame((state) => state.end);
+  const restart = useGame((state) => state.restart);
+
+  const reset = () => {
+    raycastVehicle.current?.chassisRigidBody.current?.setTranslation(
+      { x: 0, y: 10, z: 0 },
+      true,
+    );
+    raycastVehicle.current?.chassisRigidBody.current?.setRotation(
+      {
+        x: 0,
+        y: 0,
+        z: 0,
+        w: 1,
+      },
+      true,
+    );
+    raycastVehicle.current?.chassisRigidBody.current?.setLinvel(
+      { x: 0, y: 0, z: 0 },
+      true,
+    );
+    raycastVehicle.current?.chassisRigidBody.current?.setAngvel(
+      { x: 0, y: 0, z: 0 },
+      true,
+    );
+    raycastVehicle.current?.chassisRigidBody.current?.resetForces(true);
+    raycastVehicle.current?.chassisRigidBody.current?.resetTorques(true);
+  };
+
+  useEffect(() => {
+    console.log(raycastVehicle.current?.chassisRigidBody.current);
+    const unsubscribeReset = useGame.subscribe(
+      (state) => state.phase,
+      (value) => {
+        if (value === "ready") reset();
+      },
+    );
+
+    // const unsubscribeJump = subscribeKeys(
+    //     (state) => state.jump,
+    //     (value) =>
+    //     {
+    //         if(value)
+    //             jump()
+    //     }
+    // )
+
+    // replace this with checking to see if any useGame toggles have received user input / changed
+    const unsubscribeAny = subscribeKeys(() => {
+      start();
+    });
+
+    return () => {
+      unsubscribeReset();
+      // unsubscribeJump()
+      unsubscribeAny();
+    };
+  }, []);
+
+  useFrame((state, delta) => {
+    if (raycastVehicle.current) {
+      const bodyPosition =
+        raycastVehicle.current?.chassisRigidBody.current?.translation();
+      /**
+       * Phases
+       */
+      if (bodyPosition!.z > 20 || bodyPosition!.z < -20) end();
+
+      if (bodyPosition!.y < -20) restart();
+    }
+  });
+
   return (
     <>
-     <mesh geometry={overlayGeometry} material={overlayMaterial}></mesh>
       <SpeedTextTunnel.In>
         <SpeedText ref={currentSpeedTextDiv} />
       </SpeedTextTunnel.In>
@@ -271,7 +285,7 @@ const Scene = () => {
       {/* raycast vehicle */}
       <Vehicle
         ref={raycastVehicle}
-        position={[0, 4, 0]}
+        position={[0, 10, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
 
@@ -311,7 +325,7 @@ export default () => {
     debug: false,
   });
 
-  const [showControls, setShowControls] = useState(false)
+  const [showControls, setShowControls] = useState(false);
   const toggleJoystickOn = useGame((state) => state.toggleJoystickOn);
   const toggleJoystickOff = useGame((state) => state.toggleJoystickOff);
   // const [isTouchScreen, setIsTouchScreen] = useState(false);
@@ -319,7 +333,7 @@ export default () => {
   useEffect(() => {
     // Check if using a touch control device, show/hide joystick
     if ("ontouchstart" in window || navigator.maxTouchPoints > 0) {
-      // setIsTouchScreen(true);    
+      // setIsTouchScreen(true);
       toggleJoystickOn();
     } else {
       // setIsTouchScreen(false);
@@ -336,57 +350,116 @@ export default () => {
   }, []);
 
   // const brakeToggle = useGame((state: any) => state.brakeOn);
-  const toggleBrakeOn = useGame((state) => state.toggleBrakeOn);
-  toggleBrakeOn();
+  // const toggleBrakeOn = useGame((state) => state.toggleBrakeOn);
+  // toggleBrakeOn();
   // const toggleBrakeOff = useGame((state) => state.toggleBrakeOff);
 
-//  const pressButton3 = useJoystickControls(
-//     (state: { pressButton3: any }) => state.pressButton3
-//   );
+  //  const pressButton3 = useJoystickControls(
+  //     (state: { pressButton3: any }) => state.pressButton3
+  //   );
 
-  useEffect(()=>{
+  // useEffect(()=>{
+  //   if (!loading) {
+  //     window.setTimeout(() => {
+  //       setShowControls(true);
+  //     }, 2250);
+  //   }
+  // }, [loading])
+
+  const loadingBarElement = document.querySelector<HTMLElement>(".loading-bar");
+  const {
+    // active,
+    progress,
+    // errors,
+    // item,
+    // loaded,
+    // total
+  } = useProgress();
+
+  // const overlayOpacity = { value: 1 };
+  // const [overlayAlpha, setOverlayAlpha] = useState(1);
+  // const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1);
+  // const overlayMaterial = new THREE.ShaderMaterial({
+  //   transparent: true,
+  //   uniforms: {
+  //     uAlpha: { value: overlayAlpha },
+  //   },
+  //   vertexShader: `
+  //       void main()
+  //       {
+  //           gl_Position = vec4(position, 1.0);
+  //       }
+  //   `,
+  //   fragmentShader: `
+  //       uniform float uAlpha;
+
+  //       void main()
+  //       {
+  //           gl_FragColor = vec4(0.153, 0.153, 0.102, uAlpha);
+  //       }
+  //   `,
+  // });
+
+  // const phase = useGame((state) => state.phase)
+  useEffect(() => {
+    loadingBarElement!.style.transform = `scaleX(${progress / 100})`;
     if (!loading) {
+      // console.log(phase)
       window.setTimeout(() => {
-        setShowControls(true);       
-      }, 2250);
+        // animate overlay
+        // gsap.to(overlayOpacity, {
+        //   duration: 6,
+        //   value: 0,
+        //   delay: 1,
+        //   // onUpdate: () => {
+        //   //   setOverlayAlpha(overlayOpacity.value);
+        //   // },
+        //   onComplete: () => {
+        //     // set show interface to true
+        //   },
+        // });
+        // update loadingBarElement
+        loadingBarElement!.classList.add("ended");
+        loadingBarElement!.style.transform = "";
+        setShowControls(true);
+      }, 500);
     }
-  }, [loading])
+  }, [progress, loading]);
 
   return (
     <>
       <Suspense fallback={null}>
+        <Canvas
+          camera={{ fov: 60, position: [0, 30, -20] }}
+          shadows
+          // onPointerDown={(e) => {
+          //   // if (e.pointerType === "mouse") {
+          //   //   (e.target as HTMLCanvasElement).requestPointerLock();
+          //   // }
+          //   e.preventDefault;
+          // }}
+        >
+          <color attach="background" args={["#27271a"]} />
+          {/* <mesh geometry={overlayGeometry} material={overlayMaterial}></mesh> */}
+          <Physics
+            gravity={[0, -9.81, 0]}
+            updatePriority={RAPIER_UPDATE_PRIORITY}
+            // todo: support fixed timestepping
+            // right now if timeStep is not "vary", the wheel positions will be incorrect and will visually jitter
+            // timeStep={1 / 60} // originally set to "vary"
+            // erp={0.25} // just trying out erp customizations
+            // joint-erp={0.25} // ^
+            paused={!visible || loading}
+            debug={debug}
+          >
+            <Scene />
+          </Physics>
+        </Canvas>
 
-      <Canvas
-        camera={{ fov: 60, position: [0, 30, -20] }}
-        shadows
-        // onPointerDown={(e) => {
-        //   // if (e.pointerType === "mouse") {
-        //   //   (e.target as HTMLCanvasElement).requestPointerLock();
-        //   // } 
-        //   e.preventDefault;     
-        // }}
-      >
-        <color attach="background" args={["#27271a"]} />
-
-        <Physics
-          gravity={[0, -9.81, 0]}
-          updatePriority={RAPIER_UPDATE_PRIORITY}
-          // todo: support fixed timestepping
-          // right now if timeStep is not "vary", the wheel positions will be incorrect and will visually jitter
-          // timeStep={1 / 60} // originally set to "vary"
-          // erp={0.25} // just trying out erp customizations
-          // joint-erp={0.25} // ^
-          paused={!visible || loading}
-          debug={debug}
-        > 
-          <Scene />
-        </Physics>
-      </Canvas>
-     
-      {showControls && <Interface />}   
-      <Leva hidden collapsed />
-      {showControls && <SpeedTextTunnel.Out />}
-      {/* <ControlsText>use wasd to drive, space to break</ControlsText> */}
+        {showControls && <Interface />}
+        <Leva hidden collapsed />
+        {showControls && <SpeedTextTunnel.Out />}
+        {/* <ControlsText>use wasd to drive, space to break</ControlsText> */}
       </Suspense>
     </>
   );
