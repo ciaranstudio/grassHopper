@@ -19,8 +19,8 @@ import { SpeedTextTunnel } from "./speed-text-tunnel";
 import Interface from "./Interface";
 import useGame from "./stores/useGame";
 import { useProgress } from "@react-three/drei";
-import gsap from "gsap";
-import * as THREE from "three";
+// import gsap from "gsap";
+// import * as THREE from "three";
 import { useKeyboardControls } from "@react-three/drei";
 
 const Text = styled.div`
@@ -201,7 +201,7 @@ const Scene = () => {
   // adding in phases (useGame store) update
 
   // replace this with checking to see if any useGame toggles have received user input / changed
-  const [subscribeKeys, getKeys] = useKeyboardControls();
+  const [subscribeKeys, _] = useKeyboardControls();
 
   const start = useGame((state) => state.start);
   const end = useGame((state) => state.end);
@@ -263,7 +263,7 @@ const Scene = () => {
     };
   }, []);
 
-  useFrame((state, delta) => {
+  useFrame(() => {
     if (raycastVehicle.current) {
       const bodyPosition =
         raycastVehicle.current?.chassisRigidBody.current?.translation();
