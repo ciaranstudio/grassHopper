@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Physics, useBeforePhysicsStep } from "@react-three/rapier";
 import { Leva, useControls as useLeva } from "leva";
 import { Suspense, useState, useEffect, useRef } from "react";
-import styled from "styled-components";
+// import styled from "styled-components";
 import { Quaternion, Vector3 } from "three";
 import { Canvas } from "./canvas";
 import { usePageVisible } from "./use-page-visible";
@@ -22,14 +22,16 @@ import { useProgress } from "@react-three/drei";
 // import gsap from "gsap";
 // import * as THREE from "three";
 
-const Text = styled.div`
-  width: 100%;
-  text-align: center;
-  font-size: 2em;
-  color: white;
-  font-family: monospace;
-  text-shadow: 2px 2px black;
-`;
+// TODO: adjust this once the time and restart button display is sorted
+// undo commented out speed text components below:
+// const Text = styled.div`
+//   width: 100%;
+//   text-align: center;
+//   font-size: 2em;
+//   color: white;
+//   font-family: monospace;
+//   text-shadow: 2px 2px black;
+// `;
 
 // const ControlsText = styled(Text)`
 //   position: absolute;
@@ -37,12 +39,12 @@ const Text = styled.div`
 //   left: 0;
 // `;
 
-const SpeedText = styled(Text)`
-  position: absolute;
-  bottom: 2em;
-  left: 0;
-  font-size: 1em;
-`;
+// const SpeedText = styled(Text)`
+//   position: absolute;
+//   top: 80px;
+//   left: 0;
+//   font-size: 1em;
+// `;
 
 const cameraIdealOffset = new Vector3();
 const cameraIdealLookAt = new Vector3();
@@ -50,8 +52,9 @@ const chassisTranslation = new Vector3();
 const chassisRotation = new Quaternion();
 
 const Scene = () => {
+  const startingPositionY = 4;
   const raycastVehicle = useRef<VehicleRef>(null);
-  const currentSpeedTextDiv = useRef<HTMLDivElement>(null);
+  // const currentSpeedTextDiv = useRef<HTMLDivElement>(null);
   const camera = useThree((state) => state.camera);
   const currentCameraPosition = useRef(new Vector3(15, 15, 0));
   const currentCameraLookAt = useRef(new Vector3());
@@ -159,10 +162,10 @@ const Scene = () => {
     }
 
     // update speed text
-    if (currentSpeedTextDiv.current) {
-      const km = Math.abs(vehicle.state.currentVehicleSpeedKmHour).toFixed();
-      currentSpeedTextDiv.current.innerText = `${km} km/h`;
-    }
+    // if (currentSpeedTextDiv.current) {
+    //   const km = Math.abs(vehicle.state.currentVehicleSpeedKmHour).toFixed();
+    //   currentSpeedTextDiv.current.innerText = `${km} km/h`;
+    // }
 
     // update brake lights
     setBraking(brakeForce > 0, reverseToggle, gasToggle);
@@ -228,7 +231,7 @@ const Scene = () => {
   const reset = () => {
     resetStoreControls();
     raycastVehicle.current?.chassisRigidBody.current?.setTranslation(
-      { x: 0, y: 10, z: 0 },
+      { x: 0, y: startingPositionY, z: 0 },
       true,
     );
     raycastVehicle.current?.chassisRigidBody.current?.setRotation(
@@ -262,8 +265,15 @@ const Scene = () => {
       },
     );
 
-    const unsubscribeInput = useGame.subscribe(
+    const unsubscribeGasStart = useGame.subscribe(
       (state) => state.gasOn,
+      (value) => {
+        if (value === true) start();
+      },
+    );
+
+    const unsubscribeReverseStart = useGame.subscribe(
+      (state) => state.reverseOn,
       (value) => {
         if (value === true) start();
       },
@@ -281,7 +291,8 @@ const Scene = () => {
     return () => {
       unsubscribeReset();
       // unsubscribeJump()
-      unsubscribeInput();
+      unsubscribeReverseStart;
+      unsubscribeGasStart();
     };
   }, []);
 
@@ -300,14 +311,14 @@ const Scene = () => {
 
   return (
     <>
-      <SpeedTextTunnel.In>
-        <SpeedText ref={currentSpeedTextDiv} />
-      </SpeedTextTunnel.In>
+      {/* <SpeedTextTunnel.In> */}
+      {/* <SpeedText ref={currentSpeedTextDiv} /> */}
+      {/* </SpeedTextTunnel.In> */}
 
       {/* raycast vehicle */}
       <Vehicle
         ref={raycastVehicle}
-        position={[0, 10, 0]}
+        position={[0, startingPositionY, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
 
