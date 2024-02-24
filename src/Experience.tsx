@@ -303,8 +303,13 @@ const Scene = () => {
       /**
        * Phases
        */
-      if (bodyPosition!.z > 20 || bodyPosition!.z < -20) end();
-
+      if (
+        bodyPosition!.z > 80 ||
+        bodyPosition!.z < -80 ||
+        bodyPosition!.x > 80 ||
+        bodyPosition!.x < -80
+      )
+        end();
       if (bodyPosition!.y < -20) restart();
     }
   });
