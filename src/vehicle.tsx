@@ -387,7 +387,14 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
                       geometry={(nodes.Mesh_body_1 as THREE.Mesh).geometry}
                       material={materials.paintBlue}
                     >
-                      <meshPhongMaterial color={"#ffffff"} />
+                      <meshStandardMaterial
+                        // emissive={"#ffffff"}
+                        // emissiveIntensity={0.05}
+                        color={"#ffffff"}
+                        flatShading
+                        metalness={0.25}
+                        roughness={0}
+                      />
                       {/* <Edges /> */}
                     </mesh>
 

@@ -147,7 +147,7 @@ export default function Interface() {
       elapsedTime /= 1000;
       elapsedTimeString = elapsedTime.toFixed(0);
       setTime(elapsedTimeString);
-      console.log("time: ", time);
+      // console.log("time: ", time);
 
       if (!joystickOn) {
         if (controls.current.forward) {
