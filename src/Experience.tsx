@@ -9,7 +9,6 @@ import { LEVA_KEY, RAPIER_UPDATE_PRIORITY } from "./constants";
 import { SpeedTextTunnel } from "./speed-text-tunnel";
 import Interface from "./Interface";
 import useGame from "./stores/useGame";
-import { useProgress } from "@react-three/drei";
 import Setting from "./Setting";
 
 // TODO: reinstate this once the time and restart button display is sorted
@@ -69,64 +68,13 @@ export default () => {
     };
   }, []);
 
-  const loadingBarElement = document.querySelector<HTMLElement>(".loading-bar");
-  const {
-    // active,
-    progress,
-    // errors,
-    // item,
-    // loaded,
-    // total
-  } = useProgress();
-
-  // const overlayOpacity = { value: 1 };
-  // const [overlayAlpha, setOverlayAlpha] = useState(1);
-  // const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1);
-  // const overlayMaterial = new THREE.ShaderMaterial({
-  //   transparent: true,
-  //   uniforms: {
-  //     uAlpha: { value: overlayAlpha },
-  //   },
-  //   vertexShader: `
-  //       void main()
-  //       {
-  //           gl_Position = vec4(position, 1.0);
-  //       }
-  //   `,
-  //   fragmentShader: `
-  //       uniform float uAlpha;
-
-  //       void main()
-  //       {
-  //           gl_FragColor = vec4(0.153, 0.153, 0.102, uAlpha);
-  //       }
-  //   `,
-  // });
-
   useEffect(() => {
-    loadingBarElement!.style.transform = `scaleX(${progress / 100})`;
     if (!loading) {
       window.setTimeout(() => {
-        // animate overlay
-        // gsap.to(overlayOpacity, {
-        //   duration: 6,
-        //   value: 0,
-        //   delay: 1,
-        //   // onUpdate: () => {
-        //   //   setOverlayAlpha(overlayOpacity.value);
-        //   // },
-        //   onComplete: () => {
-        //     // set show interface to true
-        //   },
-        // });
-
-        // update loadingBarElement
-        loadingBarElement!.classList.add("ended");
-        loadingBarElement!.style.transform = "";
         setShowControls(true);
       }, 500);
     }
-  }, [progress, loading]);
+  }, [loading]);
 
   return (
     <>
@@ -160,7 +108,7 @@ export default () => {
         </Canvas>
 
         {showControls && <Interface />}
-        <Leva hidden collapsed />
+        <Leva collapsed hidden />
         {showControls && <SpeedTextTunnel.Out />}
         {/* <ControlsText>use wasd to drive, space to break</ControlsText> */}
       </Suspense>

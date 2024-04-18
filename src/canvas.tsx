@@ -1,5 +1,6 @@
 import { Canvas as R3FCanvas } from "@react-three/fiber";
 import JoystickControls from "./JoystickControls";
+import { Loader } from "@react-three/drei";
 
 export const Canvas = ({
   children,
@@ -10,5 +11,6 @@ export const Canvas = ({
     <R3FCanvas id="gl" {...rest}>
       {children}
     </R3FCanvas>
+    <Loader />
   </>
 );
