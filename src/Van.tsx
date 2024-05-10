@@ -32,6 +32,7 @@ const SpeedText = styled(Text)`
   bottom: 4svh;
   left: 0;
   font-size: 2svh;
+  font-family: var(--leva-fonts-mono);
 `;
 
 const cameraIdealOffset = new Vector3();
@@ -107,14 +108,15 @@ export default function Van() {
       //   { x: x, y: y + 0.15, z: z },
       //   true
       // );
-      raycastVehicle.current.rapierRaycastVehicle.current.chassisRigidBody.applyImpulse(
-        { x: 0, y: 10, z: 0 },
-        true,
-      );
-      raycastVehicle.current.rapierRaycastVehicle.current.chassisRigidBody.applyTorqueImpulse(
-        { x: 20, y: 0, z: 10 },
-        true,
-      );
+      // raycastVehicle.current.rapierRaycastVehicle.current.chassisRigidBody.applyImpulse(
+      //   { x: 0, y: 10, z: 0 },
+      //   true,
+      // );
+      reset();
+      // raycastVehicle.current.rapierRaycastVehicle.current.chassisRigidBody.applyTorqueImpulse(
+      //   { x: 20, y: 0, z: 10 },
+      //   true,
+      // );
       // raycastVehicle.current.rapierRaycastVehicle.current.chassisRigidBody.setAdditionalMass();
     }
 
@@ -151,7 +153,7 @@ export default function Van() {
         // TODO: adjusted here for now before editing currrentVehicleSpeedKmHour calculation
         vehicle.state.currentVehicleSpeedKmHour / 2,
       ).toFixed();
-      currentSpeedTextDiv.current.innerText = `${km} mph`;
+      currentSpeedTextDiv.current.innerText = `${km} km/h`;
     }
 
     // update brake lights

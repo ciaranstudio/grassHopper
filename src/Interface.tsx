@@ -58,7 +58,7 @@ export default function Interface() {
   const toggleJumpOn = useGame((state) => state.toggleJumpOn);
   const toggleJumpOff = useGame((state) => state.toggleJumpOff);
 
-  const [time, setTime] = useState("0");
+  const [_time, setTime] = useState("0");
   const restart = useGame((state) => state.restart);
   const phase = useGame((state) => state.phase);
 
@@ -276,7 +276,7 @@ export default function Interface() {
   return (
     <>
       {/* Time */}
-      <div className="time">{time}</div>
+      {/* <div className="time">{time}</div> */}
 
       {/* Restart */}
       {phase === "ended" && (

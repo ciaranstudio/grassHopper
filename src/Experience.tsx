@@ -10,31 +10,7 @@ import { SpeedTextTunnel } from "./speed-text-tunnel";
 import Interface from "./Interface";
 import useGame from "./stores/useGame";
 import Setting from "./Setting";
-
-// TODO: reinstate this once the time and restart button display is sorted
-// undo commented out speed text components below:
-
-// const Text = styled.div`
-//   width: 100%;
-//   text-align: center;
-//   font-size: 2em;
-//   color: white;
-//   font-family: monospace;
-//   text-shadow: 2px 2px black;
-// `;
-
-// const ControlsText = styled(Text)`
-//   position: absolute;
-//   bottom: 4em;
-//   left: 0;
-// `;
-
-// const SpeedText = styled(Text)`
-//   position: absolute;
-//   top: 80px;
-//   left: 0;
-//   font-size: 1em;
-// `;
+import Placeholder from "./Placeholder";
 
 export default () => {
   const loading = useLoadingAssets();
@@ -72,13 +48,14 @@ export default () => {
     if (!loading) {
       window.setTimeout(() => {
         setShowControls(true);
+        window.document.body.style.cursor = "auto";
       }, 500);
     }
   }, [loading]);
 
   return (
     <>
-      <Suspense fallback={null}>
+      <Suspense fallback={<Placeholder />}>
         <Canvas
           camera={{ fov: 60, position: [0, 30, -20] }}
           shadows
