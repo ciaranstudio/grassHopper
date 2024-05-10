@@ -26,6 +26,10 @@ export default () => {
   // const [isTouchScreen, setIsTouchScreen] = useState(false);
 
   useEffect(() => {
+    window.document.body.style.cursor = "wait";
+  }, []);
+
+  useEffect(() => {
     // Check if using a touch control device, show/hide joystick
     if ("ontouchstart" in window || navigator.maxTouchPoints > 0) {
       // setIsTouchScreen(true);
