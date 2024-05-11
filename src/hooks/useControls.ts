@@ -29,7 +29,7 @@ export type Controls = Record<GameControl, boolean>;
 
 const useKeyControls = (
   { current }: MutableRefObject<Controls>,
-  map: Record<KeyCode, GameControl>
+  map: Record<KeyCode, GameControl>,
 ) => {
   useEffect(() => {
     const handleKeydown = ({ key }: KeyboardEvent) => {

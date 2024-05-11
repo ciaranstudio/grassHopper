@@ -1,20 +1,22 @@
 import { EcctrlJoystick } from "ecctrl";
-// import { PropsWithChildren } from "react";
 import useGame from "../store/useGame";
 import { useLoadingAssets } from "../hooks/useLoadingAssets";
 import { useState, useEffect } from "react";
 export interface CustomJoystickProps {}
 
 export default function EcctrlJoystickControls() {
-  // props: PropsWithChildren<CustomJoystickProps>
+  // useState
+  const [showControls, setShowControls] = useState(false);
+
+  // state from store
   const gasToggle = useGame((state: any) => state.gasOn);
   const reverseToggle = useGame((state: any) => state.reverseOn);
   const brakeToggle = useGame((state: any) => state.brakeOn);
   const jumpToggle = useGame((state: any) => state.jumpOn);
   const joystickToggle = useGame((state: any) => state.joystickOn);
 
+  // loading hook
   const loading = useLoadingAssets();
-  const [showControls, setShowControls] = useState(false);
 
   useEffect(() => {
     if (!loading) {

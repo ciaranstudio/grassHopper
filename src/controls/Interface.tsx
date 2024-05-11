@@ -9,18 +9,10 @@ export interface InterfaceProps {
 }
 
 export default function Interface() {
-  // should i unsubscribe this from inside useEffect hook?
-  const joystickToggle = useGame((state: any) => state.joystickOn);
-  const gasToggle = useGame((state: any) => state.gasOn);
-  const reverseToggle = useGame((state: any) => state.reverseOn);
-  const brakeToggle = useGame((state: any) => state.brakeOn);
-  const leftToggle = useGame((state: any) => state.leftOn);
-  const rightToggle = useGame((state: any) => state.rightOn);
-  const jumpToggle = useGame((state: any) => state.jumpOn);
+  // useState
+  const [_time, setTime] = useState("0");
 
-  // const getJoystickValues = useJoystickControls(
-  //   (state: { getJoystickValues: any }) => state.getJoystickValues
-  // );
+  // state from joystick controls (mobile)
   const joystickDis = useJoystickControls(
     (state: { curJoystickDis: any }) => state.curJoystickDis,
   );
@@ -41,10 +33,21 @@ export default function Interface() {
   const joystickButton4 = useJoystickControls(
     (state: { curButton4Pressed: any }) => state.curButton4Pressed,
   );
-  // const pressButton3 = useJoystickControls(
-  //   (state: { pressButton3: any }) => state.pressButton3
-  // );
 
+  // state from store
+  // vehicle gas, brakes, steering, reset/jump
+  const joystickToggle = useGame((state: any) => state.joystickOn);
+  const gasToggle = useGame((state: any) => state.gasOn);
+  const reverseToggle = useGame((state: any) => state.reverseOn);
+  const brakeToggle = useGame((state: any) => state.brakeOn);
+  const leftToggle = useGame((state: any) => state.leftOn);
+  const rightToggle = useGame((state: any) => state.rightOn);
+  const jumpToggle = useGame((state: any) => state.jumpOn);
+  // phase state
+  const phase = useGame((state) => state.phase);
+
+  // actions from store
+  // vehicle gas, brakes, steering, reset/jump
   const toggleGasOn = useGame((state) => state.toggleGasOn);
   const toggleGasOff = useGame((state) => state.toggleGasOff);
   const toggleReverseOn = useGame((state) => state.toggleReverseOn);
@@ -57,16 +60,13 @@ export default function Interface() {
   const toggleLeftOff = useGame((state) => state.toggleLeftOff);
   const toggleJumpOn = useGame((state) => state.toggleJumpOn);
   const toggleJumpOff = useGame((state) => state.toggleJumpOff);
-
-  const [_time, setTime] = useState("0");
+  // phase action
   const restart = useGame((state) => state.restart);
-  const phase = useGame((state) => state.phase);
 
   const controls = useControls();
-  // TBC but it appears that joystick controls have their own auto subscribe / unsubscribe
+
+  // useEffect
   useEffect(() => {
-    // const unsubscribeEffect = addEffect(() => {
-    // const state = useGame.getState();
     const { phase, gasOn, reverseOn, joystickOn } = useGame.getState();
     if (joystickOn) {
       if (joystickButton4) {
@@ -118,11 +118,6 @@ export default function Interface() {
         toggleRightOff();
       }
     }
-    // }
-    // );
-    // return () => {
-    //   unsubscribeEffect();
-    // };
   }, [
     joystickButton1,
     joystickButton2,
@@ -134,8 +129,6 @@ export default function Interface() {
 
   useEffect(() => {
     const unsubscribeEffect = addEffect(() => {
-      // const { joystickOn } = useGame.getState();
-      // const { phase } = useGame.getState();
       const { phase, joystickOn, startTime, endTime } = useGame.getState();
 
       let elapsedTime = 0;
@@ -147,7 +140,6 @@ export default function Interface() {
       elapsedTime /= 1000;
       elapsedTimeString = elapsedTime.toFixed(0);
       setTime(elapsedTimeString);
-      // console.log("time: ", time);
 
       if (!joystickOn) {
         if (controls.current.forward) {
@@ -190,88 +182,6 @@ export default function Interface() {
       unsubscribeEffect();
     };
   }, []);
-
-  // useEffect(() => {
-  //   const unsubscribeEffect = addEffect(() => {
-  //     const { phase, startTime, endTime } = useGame.getState();
-
-  //     let elapsedTime = 0;
-  //     let elapsedTimeString = "0";
-
-  //     if (phase === "playing") elapsedTime = Date.now() - startTime;
-  //     else if (phase === "ended") elapsedTime = endTime - startTime;
-
-  //     elapsedTime /= 1000;
-  //     elapsedTimeString = elapsedTime.toFixed(0);
-  //     setTime(elapsedTimeString);
-  //     console.log("time: ", time);
-  //   });
-
-  //   return () => {
-  //     unsubscribeEffect();
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   const { gasOn, reverseOn, joystickOn } = useGame.getState();
-  //   if (joystickOn) {
-  //     if (joystickButton4) {
-  //       toggleJumpOn();
-  //       setTimeout(() => {
-  //         toggleJumpOff();
-  //       }, 80);
-  //     } else {
-  //       toggleJumpOff();
-  //     }
-  //     if (joystickButton2) {
-  //       if (gasOn) {
-  //         toggleGasOff();
-  //       } else if (!gasOn) {
-  //         toggleGasOn();
-  //         toggleReverseOff();
-  //       }
-  //     }
-  //     if (joystickButton1) {
-  //       if (reverseOn) {
-  //         toggleReverseOff();
-  //       } else if (!reverseOn) {
-  //         toggleReverseOn();
-  //         toggleGasOff();
-  //       }
-  //     }
-  //     if (joystickButton3) {
-  //       toggleBrakeOn();
-  //     } else {
-  //       toggleBrakeOff();
-  //     }
-
-  //     if (joystickDis > 0) {
-  //       if (joystickAng >= Math.PI / 2 && joystickAng <= (Math.PI / 2) * 3) {
-  //         toggleLeftOn();
-  //         toggleRightOff();
-  //       } else if (joystickAng < Math.PI / 2 && joystickAng >= 0) {
-  //         toggleLeftOff();
-  //         toggleRightOn();
-  //       } else if (
-  //         joystickAng <= Math.PI * 2 &&
-  //         joystickAng > (Math.PI / 2) * 3
-  //       ) {
-  //         toggleLeftOff();
-  //         toggleRightOn();
-  //       }
-  //     } else if (joystickDis === 0) {
-  //       toggleLeftOff();
-  //       toggleRightOff();
-  //     }
-  //   }
-  // }, [
-  //   joystickButton1,
-  //   joystickButton2,
-  //   joystickButton3,
-  //   joystickButton4,
-  //   joystickDis,
-  //   joystickAng,
-  // ]);
 
   return (
     <>

@@ -1,6 +1,5 @@
 import { useGLTF } from "@react-three/drei";
 import {
-  // ConvexHullCollider,
   CuboidCollider,
   RapierRigidBody,
   RigidBody,
@@ -28,89 +27,9 @@ import {
   Vector3,
   Vector3Tuple,
 } from "three";
-// import { GLTF } from "three-stdlib";
-// import chassisDracoUrl from "./assets/chassis-draco.glb?url";
 import { LEVA_KEY } from "./constants";
 import { RapierRaycastVehicle, WheelOptions } from "./rapierRaycastVehicle";
-// import wheelGlbUrl from "./assets/wheel-draco.glb?url";
 import { Helper } from "./Helper";
-
-// type WheelGLTF = GLTF & {
-//   nodes: {
-//     Mesh_14: Mesh;
-//     Mesh_14_1: Mesh;
-//   };
-//   materials: {
-//     "Material.002": MeshStandardMaterial;
-//     "Material.009": MeshStandardMaterial;
-//   };
-// };
-
-// interface ChassisGLTF extends GLTF {
-//   nodes: {
-//     Chassis_1: Mesh;
-//     Chassis_2: Mesh;
-//     Glass: Mesh;
-//     BrakeLights: Mesh;
-//     HeadLights: Mesh;
-//     Cabin_Grilles: Mesh;
-//     Undercarriage: Mesh;
-//     TurnSignals: Mesh;
-//     Chrome: Mesh;
-//     Wheel_1: Mesh;
-//     Wheel_2: Mesh;
-//     License_1: Mesh;
-//     License_2: Mesh;
-//     Cube013: Mesh;
-//     Cube013_1: Mesh;
-//     Cube013_2: Mesh;
-//     "pointer-left": Mesh;
-//     "pointer-right": Mesh;
-//   };
-//   materials: {
-//     BodyPaint: MeshStandardMaterial;
-//     License: MeshStandardMaterial;
-//     Chassis_2: MeshStandardMaterial;
-//     Glass: MeshStandardMaterial;
-//     BrakeLight: MeshStandardMaterial;
-//     defaultMatClone: MeshStandardMaterial;
-//     HeadLight: MeshStandardMaterial;
-//     Black: MeshStandardMaterial;
-//     Undercarriage: MeshStandardMaterial;
-//     TurnSignal: MeshStandardMaterial;
-//   };
-// }
-
-// type WheelProps = JSX.IntrinsicElements["group"] & {
-//   side: "left" | "right";
-//   radius: number;
-// };
-
-// const Wheel = ({ side, radius, ...props }: WheelProps) => {
-//   const groupRef = useRef<Group>(null!);
-
-//   const { nodes, materials } = useGLTF(wheelGlbUrl) as WheelGLTF;
-//   const scale = radius / 0.34;
-
-//   return (
-//     <group dispose={null} {...props} ref={groupRef}>
-//       <group scale={scale}>
-//         <group scale={side === "left" ? -1 : 1}>
-//           <mesh
-//             castShadow
-//             geometry={nodes.Mesh_14.geometry}
-//             material={materials["Material.002"]}
-//           />
-//           <mesh
-//             castShadow
-//             geometry={nodes.Mesh_14_1.geometry}
-//             material={materials["Material.009"]}
-//           />
-//         </group>
-//       </group>
-//     </group>
-//   );
-// };
 
 const BRAKE_LIGHTS_ON_COLOR = new Color(1, 0.05, 0.05).multiplyScalar(1.5);
 const BRAKE_LIGHTS_OFF_COLOR = new Color(0x333333);
@@ -136,7 +55,6 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
   ({ children, ...groupProps }, ref) => {
     const rapier = useRapier();
 
-    // const { nodes: n, materials: m } = useGLTF(chassisDracoUrl) as ChassisGLTF;
     const { nodes, materials } = useGLTF("/pmndrsVan.gltf");
     const vehicleRef = useRef<RapierRaycastVehicle>(null!);
     const chassisRigidBodyRef = useRef<RapierRigidBody>(null!);
@@ -164,7 +82,7 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
       vehicleBack,
       ...levaWheelOptions
     } = useLeva(`${LEVA_KEY}-wheel-options`, {
-      radius: 0.5, // originally radius: 0.38,
+      radius: 0.5,
 
       indexRightAxis: 2,
       indexForwardAxis: 0,
@@ -179,20 +97,20 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
       maxSuspensionTravel: 0.3,
 
       sideFrictionStiffness: 1,
-      frictionSlip: 1.4, // originally frictionSlip: 1.4,
-      dampingRelaxation: 2.3, //  originally dampingRelaxation: 2.3,
-      dampingCompression: 4.4, // originally dampingCompression: 4.4,
+      frictionSlip: 1.4,
+      dampingRelaxation: 2.3,
+      dampingCompression: 4.4,
 
-      rollInfluence: 0.01, // originally rollInfluence: 0.01,
+      rollInfluence: 0.01,
 
       customSlidingRotationalSpeed: -30,
       useCustomSlidingRotationalSpeed: true,
 
-      forwardAcceleration: 1, // originally forwardAcceleration: 1,
-      sideAcceleration: 1, // originally sideAcceleration: 1,
+      forwardAcceleration: 1,
+      sideAcceleration: 1,
 
-      vehicleWidth: 2.8, // originally vehicleWidth: -1.7,
-      vehicleHeight: -0.1, // originally vehicleHeight: -0.3,
+      vehicleWidth: 2.8,
+      vehicleHeight: -0.1,
       vehicleFront: -1.35,
       vehicleBack: 1.3,
     });
@@ -321,13 +239,10 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
             {...groupProps}
             colliders={false}
             ref={chassisRigidBodyRef}
-            mass={150} // originally 150
-            // scale={2}
+            mass={150}
           >
             {/* Collider */}
-            {/* todo: change to convex hull */}
             <CuboidCollider args={[2.35, 1.075, 1.1]} position={[0, 0.6, 0]} />
-            {/* <ConvexHullCollider /> */}
 
             {/* Headlights */}
             {[
@@ -519,36 +434,6 @@ export const Vehicle = forwardRef<VehicleRef, VehicleProps>(
               {children}
             </group>
           </RigidBody>
-
-          {/* Wheels */}
-          {/* <group ref={topLeftWheelObject}>
-            <Wheel
-              rotation={[0, Math.PI / 2, 0]}
-              side="left"
-              radius={commonWheelOptions.radius}
-            />
-          </group>
-          <group ref={topRightWheelObject}>
-            <Wheel
-              rotation={[0, Math.PI / 2, 0]}
-              side="right"
-              radius={commonWheelOptions.radius}
-            />
-          </group>
-          <group ref={bottomLeftWheelObject}>
-            <Wheel
-              rotation={[0, Math.PI / 2, 0]}
-              side="left"
-              radius={commonWheelOptions.radius}
-            />
-          </group>
-          <group ref={bottomRightWheelObject}>
-            <Wheel
-              rotation={[0, Math.PI / 2, 0]}
-              side="right"
-              radius={commonWheelOptions.radius}
-            />
-          </group> */}
         </group>
       </>
     );

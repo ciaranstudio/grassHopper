@@ -13,18 +13,22 @@ import Setting from "./space/Setting";
 import Placeholder from "./loading/Placeholder";
 
 export default () => {
+  // hooks
   const loading = useLoadingAssets();
   const visible = usePageVisible();
-
   const { debug } = useLeva(`${LEVA_KEY}-physics`, {
     debug: false,
   });
 
+  // useState
   const [showControls, setShowControls] = useState(false);
-  const toggleJoystickOn = useGame((state) => state.toggleJoystickOn);
-  const toggleJoystickOff = useGame((state) => state.toggleJoystickOff);
   // const [isTouchScreen, setIsTouchScreen] = useState(false);
 
+  // state from store
+  const toggleJoystickOn = useGame((state) => state.toggleJoystickOn);
+  const toggleJoystickOff = useGame((state) => state.toggleJoystickOff);
+
+  // useEffect
   useEffect(() => {
     window.document.body.style.cursor = "wait";
   }, []);
@@ -71,15 +75,9 @@ export default () => {
           // }}
         >
           <color attach="background" args={["#27271a"]} />
-          {/* <mesh geometry={overlayGeometry} material={overlayMaterial}></mesh> */}
           <Physics
             gravity={[0, -9.81, 0]}
             updatePriority={RAPIER_UPDATE_PRIORITY}
-            // todo from source rapier-raycast-vehicle dev: support fixed timestepping
-            // right now if timeStep is not "vary", the wheel positions will be incorrect and will visually jitter
-            // timeStep={1 / 60} // originally set to "vary"
-            // erp={0.25} // just trying out erp customizations
-            // joint-erp={0.25} // ^
             paused={!visible || loading}
             debug={debug}
           >

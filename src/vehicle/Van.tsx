@@ -19,7 +19,6 @@ const Text = styled.div`
   color: white;
   font-family: sans-seri;
 `;
-// text-shadow: 2px 1px black;
 
 // const ControlsText = styled(Text)`
 //   position: absolute;
@@ -58,9 +57,9 @@ export default function Van() {
   });
 
   const { maxForce, maxSteer, maxBrake } = useLeva(`${LEVA_KEY}-controls`, {
-    maxForce: 45, // was 30 originally
-    maxSteer: 10, //  was 10 originally
-    maxBrake: 1, //  was 2 originally
+    maxForce: 45,
+    maxSteer: 10,
+    maxBrake: 1,
   });
 
   const gasToggle = useGame((state: any) => state.gasOn);
@@ -102,6 +101,7 @@ export default function Van() {
       steering -= maxSteer;
     }
     if (jumpToggle) {
+      reset();
       // const { x, y, z } =
       //   raycastVehicle.current.rapierRaycastVehicle.current.chassisRigidBody.translation();
       // raycastVehicle.current.rapierRaycastVehicle.current.chassisRigidBody.setTranslation(
@@ -112,7 +112,6 @@ export default function Van() {
       //   { x: 0, y: 10, z: 0 },
       //   true,
       // );
-      reset();
       // raycastVehicle.current.rapierRaycastVehicle.current.chassisRigidBody.applyTorqueImpulse(
       //   { x: 20, y: 0, z: 10 },
       //   true,
@@ -150,7 +149,6 @@ export default function Van() {
     // update speed text
     if (currentSpeedTextDiv.current) {
       const km = Math.abs(
-        // TODO: adjusted here for now before editing currrentVehicleSpeedKmHour calculation
         vehicle.state.currentVehicleSpeedKmHour / 2,
       ).toFixed();
       currentSpeedTextDiv.current.innerText = `${km} km/h`;
@@ -262,18 +260,8 @@ export default function Van() {
       },
     );
 
-    // const unsubscribeJump = subscribeKeys(
-    //     (state) => state.jump,
-    //     (value) =>
-    //     {
-    //         if(value)
-    //             jump()
-    //     }
-    // )
-
     return () => {
       unsubscribeReset();
-      // unsubscribeJump()
       unsubscribeReverseStart;
       unsubscribeGasStart();
     };
@@ -317,7 +305,6 @@ export default function Van() {
         position={[50, 30, 50]}
         intensity={5}
         target-position={[0, 0, 0]}
-        // target={raycastVehicle.current} // TODO: fix type error here to use, adjust VehicleRef?
       />
 
       {cameraMode === "orbit" && <OrbitControls />}

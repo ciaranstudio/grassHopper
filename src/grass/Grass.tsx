@@ -381,13 +381,12 @@ const Grass = () => {
   }, [width]);
 
   useFrame(({ clock: { elapsedTime } }) => {
-    uTime.current.value = elapsedTime; //  uTime.current.value = elapsedTime / 4;
+    uTime.current.value = elapsedTime;
   });
 
   return (
     <>
       <group position={[0, 0, 0]}>
-        {/* <RigidBody type="fixed" colliders="ball" mass={0.001}> */}
         <mesh frustumCulled={false}>
           <instancedBufferGeometry
             index={baseGeometry.index}
@@ -444,7 +443,6 @@ const Grass = () => {
             toneMapped={false}
           />
         </mesh>
-        {/* </RigidBody> */}
         <RigidBody type="fixed" friction={2} colliders="trimesh">
           <mesh>
             <primitive object={groundGeometry} />
@@ -452,12 +450,6 @@ const Grass = () => {
           </mesh>
         </RigidBody>
       </group>
-
-      {/* <PerspectiveCamera
-        makeDefault
-        position={[40, maxHeight + 10, 40]}
-        fov={50}
-      /> */}
     </>
   );
 };
@@ -466,8 +458,6 @@ export default () => {
   return (
     <>
       <Grass />
-      {/* <OrbitControls makeDefault autoRotate autoRotateSpeed={0.25} target={[0, 3, 0]} />
-            <CameraShake maxRoll={0} maxPitch={0.05} maxYaw={0.05} /> */}
     </>
   );
 };
