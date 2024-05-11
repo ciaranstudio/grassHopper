@@ -1,7 +1,7 @@
 import { addEffect } from "@react-three/fiber";
 import { useJoystickControls } from "ecctrl";
-import useGame from "./stores/useGame.js";
-import { useControls } from "./use-controls";
+import useGame from "./store/useGame.js";
+import { useControls } from "./useControls.js";
 import { useEffect, useState } from "react";
 
 export interface InterfaceProps {

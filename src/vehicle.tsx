@@ -31,9 +31,9 @@ import {
 // import { GLTF } from "three-stdlib";
 // import chassisDracoUrl from "./assets/chassis-draco.glb?url";
 import { LEVA_KEY } from "./constants";
-import { RapierRaycastVehicle, WheelOptions } from "./rapier-raycast-vehicle";
+import { RapierRaycastVehicle, WheelOptions } from "./rapierRaycastVehicle";
 // import wheelGlbUrl from "./assets/wheel-draco.glb?url";
-import { Helper } from "./helper";
+import { Helper } from "./Helper";
 
 // type WheelGLTF = GLTF & {
 //   nodes: {

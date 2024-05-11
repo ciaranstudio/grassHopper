@@ -5,11 +5,11 @@ import { useBeforePhysicsStep } from "@react-three/rapier";
 import { useControls as useLeva } from "leva";
 import { useEffect, useRef } from "react";
 import { Object3D, Object3DEventMap, Quaternion, Vector3 } from "three";
-import { Vehicle, VehicleRef } from "./vehicle";
+import { Vehicle, VehicleRef } from "./Vehicle";
 import { AFTER_RAPIER_UPDATE, LEVA_KEY } from "./constants";
 import styled from "styled-components";
-import { SpeedTextTunnel } from "./speed-text-tunnel";
-import useGame from "./stores/useGame";
+import { SpeedTextTunnel } from "./SpeedTextTunnel";
+import useGame from "./store/useGame";
 import Placeholder from "./Placeholder";
 
 const Text = styled.div`

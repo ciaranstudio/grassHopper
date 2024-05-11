@@ -1,14 +1,14 @@
 import { Physics } from "@react-three/rapier";
 import { Leva, useControls as useLeva } from "leva";
 import { Suspense, useState, useEffect } from "react";
-import { Canvas } from "./canvas";
-import { usePageVisible } from "./use-page-visible";
-import { useLoadingAssets } from "./use-loading-assets";
+import { Canvas } from "./Canvas";
+import { usePageVisible } from "./usePageVisible";
+import { useLoadingAssets } from "./useLoadingAssets";
 import Van from "./Van";
 import { LEVA_KEY, RAPIER_UPDATE_PRIORITY } from "./constants";
-import { SpeedTextTunnel } from "./speed-text-tunnel";
+import { SpeedTextTunnel } from "./SpeedTextTunnel";
 import Interface from "./Interface";
-import useGame from "./stores/useGame";
+import useGame from "./store/useGame";
 import Setting from "./Setting";
 import Placeholder from "./Placeholder";
 
