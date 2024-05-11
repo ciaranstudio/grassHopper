@@ -1,5 +1,5 @@
 import { Canvas as R3FCanvas } from "@react-three/fiber";
-import JoystickControls from "./JoystickControls";
+import JoystickControls from "./controls/JoystickControls";
 import { Loader } from "@react-three/drei";
 
 export const Canvas = ({

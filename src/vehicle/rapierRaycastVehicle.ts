@@ -249,18 +249,18 @@ export class RapierRaycastVehicle {
     pointToWorldFrame(
       chassisBody,
       wheel.options.chassisConnectionPointLocal,
-      wheel.state.chassisConnectionPointWorld
+      wheel.state.chassisConnectionPointWorld,
     );
     vectorToWorldFrame(
       chassisBody,
       wheel.options.directionLocal,
-      wheel.state.directionWorld
+      wheel.state.directionWorld,
     );
 
     vectorToWorldFrame(
       chassisBody,
       wheel.options.axleLocal,
-      wheel.state.axleWorld
+      wheel.state.axleWorld,
     );
   }
 
@@ -292,9 +292,9 @@ export class RapierRaycastVehicle {
       const q = wheel.state.worldTransform.quaternion;
       q.multiplyQuaternions(
         this.updateWheelTransform_chassisRigidBodyQuaternion.copy(
-          this.chassisRigidBody.rotation() as Quaternion
+          this.chassisRigidBody.rotation() as Quaternion,
         ),
-        steeringOrn
+        steeringOrn,
       );
       q.multiplyQuaternions(q, rotatingOrn);
       q.normalize();
@@ -310,7 +310,7 @@ export class RapierRaycastVehicle {
   private updateCurrentSpeed(): void {
     const chassis = this.chassisRigidBody;
     const chassisVelocity = this.updateCurrentSpeed_chassisVelocity.copy(
-      chassis.linvel() as Vector3
+      chassis.linvel() as Vector3,
     );
 
     this.state.currentVehicleSpeedKmHour = 3.6 * chassisVelocity.length();
@@ -346,7 +346,7 @@ export class RapierRaycastVehicle {
         undefined,
         undefined,
         undefined,
-        this.chassisRigidBody
+        this.chassisRigidBody,
       );
 
       // if hit
@@ -359,12 +359,12 @@ export class RapierRaycastVehicle {
 
         // store hit normal
         wheel.state.hitNormalWorld.copy(
-          rayColliderIntersection.normal as Vector3
+          rayColliderIntersection.normal as Vector3,
         );
 
         // store hit point
         wheel.state.hitPointWorld.copy(
-          ray.pointAt(rayColliderIntersection.toi) as Vector3
+          ray.pointAt(rayColliderIntersection.toi) as Vector3,
         );
 
         // compute suspension length
@@ -398,11 +398,11 @@ export class RapierRaycastVehicle {
         const chassisVelocityAtContactPoint = getVelocityAtWorldPoint(
           this.chassisRigidBody,
           wheel.state.hitPointWorld,
-          this.updateWheelSuspension_chassisVelocityAtContactPoint
+          this.updateWheelSuspension_chassisVelocityAtContactPoint,
         );
 
         const projVel = wheel.state.hitNormalWorld.dot(
-          chassisVelocityAtContactPoint
+          chassisVelocityAtContactPoint,
         );
 
         if (denominator >= -0.1) {
@@ -489,7 +489,7 @@ export class RapierRaycastVehicle {
       this.chassisRigidBody.applyImpulseAtPoint(
         impulse,
         wheel.state.hitPointWorld,
-        true
+        true,
       );
     }
   }
@@ -513,7 +513,7 @@ export class RapierRaycastVehicle {
         vectorToWorldFrame(
           wheelWorldTransform,
           directions[this.indexRightAxis],
-          axle
+          axle,
         );
 
         const surfNormalWS = wheel.state.hitNormalWorld;
@@ -531,7 +531,7 @@ export class RapierRaycastVehicle {
           wheel.state.hitPointWorld,
           wheel.state.groundRigidBody,
           wheel.state.hitPointWorld,
-          axle
+          axle,
         );
 
         wheel.state.sideImpulse *= wheel.options.sideFrictionStiffness;
@@ -563,7 +563,7 @@ export class RapierRaycastVehicle {
           wheel.state.groundRigidBody,
           wheel.state.hitPointWorld,
           wheel.state.forwardWS,
-          maxImpulse
+          maxImpulse,
         );
 
         // acceleration
@@ -625,7 +625,7 @@ export class RapierRaycastVehicle {
       const wheel = this.wheels[i];
 
       const worldPos = this.updateFriction_worldPos.copy(
-        wheel.state.hitPointWorld
+        wheel.state.hitPointWorld,
       );
 
       const relPos = this.updateFriction_relPos.copy(worldPos);
@@ -657,7 +657,7 @@ export class RapierRaycastVehicle {
         vectorToLocalFrame(
           this.chassisRigidBody,
           relPos,
-          rollInfluenceAdjustedWorldPos
+          rollInfluenceAdjustedWorldPos,
         );
 
         rollInfluenceAdjustedWorldPos[
@@ -667,18 +667,18 @@ export class RapierRaycastVehicle {
         vectorToWorldFrame(
           this.chassisRigidBody,
           rollInfluenceAdjustedWorldPos,
-          rollInfluenceAdjustedWorldPos
+          rollInfluenceAdjustedWorldPos,
         );
 
         // back to world pos
         rollInfluenceAdjustedWorldPos.add(
-          this.chassisRigidBody.translation() as Vector3
+          this.chassisRigidBody.translation() as Vector3,
         );
 
         chassisBody.applyImpulseAtPoint(
           sideImp,
           rollInfluenceAdjustedWorldPos,
-          true
+          true,
         );
 
         // apply friction impulse on the ground
@@ -701,7 +701,7 @@ export class RapierRaycastVehicle {
       getVelocityAtWorldPoint(
         this.chassisRigidBody,
         wheel.state.chassisConnectionPointWorld,
-        vel
+        vel,
       );
 
       // Hack to get the rotation in the correct direction

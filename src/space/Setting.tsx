@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Sky } from "@react-three/drei";
-import Grass from "./Grass";
-import Placeholder from "./Placeholder";
+import Grass from "../grass/Grass";
+import Placeholder from "../loading/Placeholder";
 
 export default function Setting() {
   return (

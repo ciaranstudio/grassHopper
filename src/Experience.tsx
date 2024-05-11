@@ -2,15 +2,15 @@ import { Physics } from "@react-three/rapier";
 import { Leva, useControls as useLeva } from "leva";
 import { Suspense, useState, useEffect } from "react";
 import { Canvas } from "./Canvas";
-import { usePageVisible } from "./usePageVisible";
-import { useLoadingAssets } from "./useLoadingAssets";
-import Van from "./Van";
-import { LEVA_KEY, RAPIER_UPDATE_PRIORITY } from "./constants";
-import { SpeedTextTunnel } from "./SpeedTextTunnel";
-import Interface from "./Interface";
+import { usePageVisible } from "./hooks/usePageVisible";
+import { useLoadingAssets } from "./hooks/useLoadingAssets";
+import Van from "./vehicle/Van";
+import { LEVA_KEY, RAPIER_UPDATE_PRIORITY } from "./vehicle/constants";
+import { SpeedTextTunnel } from "./controls/SpeedTextTunnel";
+import Interface from "./controls/Interface";
 import useGame from "./store/useGame";
-import Setting from "./Setting";
-import Placeholder from "./Placeholder";
+import Setting from "./space/Setting";
+import Placeholder from "./loading/Placeholder";
 
 export default () => {
   const loading = useLoadingAssets();

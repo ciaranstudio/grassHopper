@@ -1,7 +1,7 @@
 import { EcctrlJoystick } from "ecctrl";
 // import { PropsWithChildren } from "react";
-import useGame from "./store/useGame";
-import { useLoadingAssets } from "./useLoadingAssets";
+import useGame from "../store/useGame";
+import { useLoadingAssets } from "../hooks/useLoadingAssets";
 import { useState, useEffect } from "react";
 export interface CustomJoystickProps {}
 

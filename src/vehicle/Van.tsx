@@ -8,9 +8,9 @@ import { Object3D, Object3DEventMap, Quaternion, Vector3 } from "three";
 import { Vehicle, VehicleRef } from "./Vehicle";
 import { AFTER_RAPIER_UPDATE, LEVA_KEY } from "./constants";
 import styled from "styled-components";
-import { SpeedTextTunnel } from "./SpeedTextTunnel";
-import useGame from "./store/useGame";
-import Placeholder from "./Placeholder";
+import { SpeedTextTunnel } from "../controls/SpeedTextTunnel";
+import useGame from "../store/useGame";
+import Placeholder from "../loading/Placeholder";
 
 const Text = styled.div`
   width: 100%;
