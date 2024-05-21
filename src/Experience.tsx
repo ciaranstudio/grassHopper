@@ -13,7 +13,7 @@ import Setting from "./space/Setting";
 import Placeholder from "./loading/Placeholder";
 
 export default () => {
-  // hooks
+  // custom hooks
   const loading = useLoadingAssets();
   const visible = usePageVisible();
   const { debug } = useLeva(`${LEVA_KEY}-physics`, {
